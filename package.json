@@ -1,0 +1,24 @@
+{
+  "name": "assignment1",
+  "version": "1.0.0",
+  "description": "This is a template repository for the first assignment in BVD 103 at McMaster Continuing Education.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start-server": "tsx ./adapter/assignment-1.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@koa/cors": "^5.0.0",
+    "axios": "^1.6.8",
+    "koa": "^2.15.3",
+    "koa-qs": "^3.0.0",
+    "koa-zod-router": "^2.2.0",
+    "zod": "^3.23.6"
+  },
+  "devDependencies": {
+    "@types/koa-qs": "^2.0.3"
+  }
+}
