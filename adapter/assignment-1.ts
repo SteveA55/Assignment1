@@ -36,10 +36,10 @@ router.register({
         //var from: number = +`${query.from}`;
         //var to: number = +`${query.to}`;
 
-
-        console.log("PARAMS::::", params)
-        console.log("BODY:::", body);
-        console.log("HEADERS::::", headers)
+        // DEBUG
+        //console.log("PARAMS::::", params)
+        //console.log("BODY:::", body);
+        //console.log("HEADERS::::", headers)
 
         // Didn't need this as we now use validate in vod instead of our own validation.
         //var filteredBooks: Promise<object> = listBooks([{ "from": from, "to": to }]);
@@ -47,7 +47,7 @@ router.register({
         var filteredBooks: Promise<object> = listBooks([{ "from": query.from, "to": query.to }]);
 
 
-        // Send the filtered book list as json back to the user
+        // Send the filtered book list as json back to the web browser
         filteredBooks.then((value) => {
             console.log("value:::::::::", value);
 
