@@ -11,7 +11,7 @@ export interface Book {
     image: string,
 };
 
-async function listBooks(filters?: Array<{from?: number, to?: number}>) : Promise<Book[]>{
+async function listBooks(filters?: Array<{ from?: number, to?: number }>): Promise<Book[]> {
     return assignment1.listBooks(filters);
 }
 
