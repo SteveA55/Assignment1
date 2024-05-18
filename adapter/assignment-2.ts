@@ -119,7 +119,7 @@ async function createOrUpdateBook(book: Book): Promise<BookID> {
     })
     */
     console.log("--------------DECODED-------------------", decodeURI(JSON.stringify(book)));
-    var bookParams: Book | string = decodeURI(JSON.stringify(book));
+    var bookParams: string = decodeURI(JSON.stringify(book));
     var result: Book | any = fetch(`http://localhost:3000/books?${bookParams}`, {
         method: "POST"
     }).then(res => res.json())
@@ -133,7 +133,16 @@ async function createOrUpdateBook(book: Book): Promise<BookID> {
 }
 
 async function removeBook(book: BookID): Promise<void> {
-    throw new Error("Todo")
+    console.log("---------(REMOVE) BOOK ID----------", book)
+    var result: Book | any = fetch(`http://localhost:3000/books?${book}`, {
+        method: "DELETE"
+    }).then(res => res.json())
+        .then((data: object | any) => {
+            console.log("........data........", data)
+        }).catch((err) => {
+            console.log("FETCH ERROR.........", err)
+        })
+    //throw new Error("Todo")
 }
 
 const assignment = "assignment-2";
