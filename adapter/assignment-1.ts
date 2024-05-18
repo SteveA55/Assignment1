@@ -56,9 +56,6 @@ async function listBooks(books?: Array<object>, filters?: Array<{ from?: number,
 }
 const assignment = "assignment-1";
 export default {
-    app,
-    router,
-    z,
     assignment,
     listBooks
 };

@@ -13,11 +13,17 @@ const router = zodRouter();
 
 const mongoose = require("mongoose");
 
+app.use(cors())
 
-var books = JSON.parse(fs.readFileSync(`./mcmasteful-book-list.json`, 'utf8'));
+var books: Array<object> = JSON.parse(fs.readFileSync(`./mcmasteful-book-list.json`, 'utf8'));
+
+//console.log("Assignment1,,,,,,,,", assignment1)
 
 
 
+
+
+// Assignment 1
 router.register({
     name: 'List of books.',
     method: 'get',
@@ -45,15 +51,59 @@ router.register({
         //console.log("HEADERS::::", headers)
         // Didn't need this as we now use validate in vod instead of our own validation.
         //var filteredBooks: Promise<object> = listBooks([{ "from": from, "to": to }]);
-        var filteredBooks: Promise<object> = assignment1.listBooks(books, [{ "from": query.from, "to": query.to }]);
+        //var filteredBooks: Promise<object> = assignment1.listBooks(books, [{ "from": query.from, "to": query.to }]);
+        //var filteredBooks: Promise<object> = assignment2.listBooks([{ "from": query.from, "to": query.to }]);
+        //console.log("\n\nAssignment1 from to FETCH receieved.\n\n")
+        console.log("QUERY...........", query.from, query.to)
+        // Assignment 1
+        var filteredBooks: Array<object> = [];
+        // Loop through all books and filters, only return the books that match the indicated filters.
+        //console.log("BOOKS", books)
+        //if (query === undefined) { return; }
+        books?.map((book: object | any) => {
 
-        // Send the filtered book list as json back to the user
-        filteredBooks.then((value) => {
-            // console.log("value:::::::::", value);
-            ctx.response.body = { value }
+            // if (typeof (query) === "object") {
+            //  if (query != undefined) { ; 
+            // query?.map((filter: object | any) => {
+            // DEBUG
+            //console.log("FROM::::::::", filter.from, "TO:::::::", filter.to);
+            //console.log("CURRENT BOOOK...........", book);
+            // Check the current book if it matches the current filter, if so, push that book onto array.
+            if (book.price <= query.to && book.price >= query.from) {
+                //console.log("A MATCH:::::", book.price);
+                filteredBooks.push(book);
+                //book.display = true;
+            }
+            /*
+            for (const key in filteredBooks) {
+             
+                console.log("value", filteredBooks[key]);
+            }*/
+
+
+            //ctx.response.body =
+            //}
+            // })
+            // DEBUG
+            //console.log(book);
         })
+
+        //console.log("DISPLAY............", books?.display)
+        filteredBooks.map((book) => {
+            console.log("BOOOOOOOOOOOOOOOOK", book)
+        })
+        //ctx.response.status = 200;
+        ///ctx.response.body = { books }
+        //ctx.response.body = { ...filteredBooks }
+        ctx.response.body = { filteredBooks }
+        // Send the filtered book list as json back to the user
+        //filteredBooks.then((value) => {
+        // console.log("value:::::::::", value);
+        //  ctx.response.body = { value }
+        // })
         // DEBUG
         //console.log("FILTERED BOOKS::::::::::", filteredBooks);
+        //return filteredBooks;
         await next();
     },
     validate: {
@@ -86,7 +136,7 @@ const Book = mongoose.model("Book", {
 
 // List all books.
 router.register({
-    name: 'Create new book.',
+    name: 'List all books.',
     method: 'get',
     path: '/books',
     handler: async (ctx, next) => {
@@ -106,7 +156,7 @@ router.register({
             ctx.response.body = { result }
         }
         else
-            console.log("Failed to fetch database.");
+            console.log("Failed to fetch document in database.");
         await next();
     }
 });
@@ -139,18 +189,24 @@ router.register({
         // Delete this later. List all documents.
         console.log(await Book.find({}));
 
-        if (result)
-            console.log(`Book created success ${query.id}:`);
-        else
-            console.log("Failed to create new book.");
+        if (result) {
+            let resp = `Book was created successfully id: ${query.id}`;
+            console.log(resp);
+            ctx.response.body = { resp }
+        }
+        else {
+            let resp = `Failed to create new book id: ${query.id}.`
+            console.log(resp);
+            ctx.response.body = { resp }
+        }
         await next();
     },
     validate: {
         // Validate input. Make sure we are working with type number and not type string as an example.
-        query: assignment1.z.object({
-            id: assignment1.z.coerce.number(), name: assignment1.z.string(),
-            author: assignment1.z.string(), description: assignment1.z.string(),
-            price: assignment1.z.coerce.number(), image: assignment1.z.string()
+        query: z.object({
+            id: z.coerce.number(), name: z.string(),
+            author: z.string(), description: z.string(),
+            price: z.coerce.number(), image: z.string()
         }),
     },
 });
@@ -179,18 +235,24 @@ router.register({
         // Delete this later. List all documents.
         console.log(await Book.find({}));
 
-        if (result)
-            console.log(`Book id ${query.id}, price has been adjusted to ${query.price}:`);
-        else
-            console.log("Failed to update book price.");
+        if (result) {
+            let resp = `Book id ${query.id}, price has been adjusted to ${query.price}:`
+            console.log(resp);
+            ctx.response.body = { resp }
+        }
+        else {
+            let resp = `Failed to update book by price.`
+            console.log(resp);
+            ctx.response.body = { resp }
+        }
 
         await next();
     },
     validate: {
         // Validate input. Make sure we are working with type number and not type string as an example.
-        query: assignment1.z.object({
-            id: assignment1.z.coerce.number(),
-            price: assignment1.z.coerce.number(),
+        query: z.object({
+            id: z.coerce.number(),
+            price: z.coerce.number(),
         }),
     },
 });
@@ -217,17 +279,23 @@ router.register({
         // Delete this later. List all documents.
         console.log(await Book.find({}));
 
-        if (result.deletedCount >= 1)
-            console.log(`Book id ${query.id}, has been removed.:`);
-        else
-            console.log(`Failed to remove book (${query.id}).`);
+        if (result.deletedCount >= 1) {
+            let resp = `Book id ${query.id}, has been removed.:`
+            console.log(resp);
+            ctx.response.body = { resp }
+        }
+        else {
+            let resp = `Failed to remove book (${query.id}).`
+            console.log(resp);
+            ctx.response.body = { resp }
+        }
 
         await next();
     },
     validate: {
         // Validate input. Make sure we are working with type number and not type string as an example.
-        query: assignment1.z.object({
-            id: assignment1.z.coerce.number()
+        query: z.object({
+            id: z.coerce.number()
         }),
     },
 });
