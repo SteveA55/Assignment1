@@ -3,7 +3,6 @@ import Koa from 'koa';
 import zodRouter from 'koa-zod-router';
 import { array, isDirty, z } from 'zod';
 import assignment1 from "../adapter/assignment-1";
-
 import assignment2 from "../adapter/assignment-2";
 
 const cors = require('@koa/cors');
@@ -19,10 +18,6 @@ var books: Array<object> = JSON.parse(fs.readFileSync(`./mcmasteful-book-list.js
 
 //console.log("Assignment1,,,,,,,,", assignment1)
 
-
-
-
-
 // Assignment 1
 router.register({
     name: 'List of books.',
@@ -31,60 +26,18 @@ router.register({
     handler: async (ctx, next) => {
         let { body, headers, query, params } = ctx.request;
 
-        // Query is always of type string. We don't have control over that, so I wrote the following code which works. But it is not susitable for this use-case scenario because query would always be of type string, not set by us. But by the framework koa-zod-router I believe.
-        /*
-        if (typeof (query.from) != 'number' || typeof (query.to) == 'number') {
-            var error: string = "Invalid input. From or To filter is not of type number. Needs to be of type number.";
-            ctx.body = { error }
-            throw new TypeError(error);
-        }*/
-
-        // We ended up not needing this as we figuered out how to use validate in zod.
-        // Convert type string to type number.
-        //var from: number = +`${query.from}`;
-        //var to: number = +`${query.to}`;
-
-        // DEBUG
-        //console.log("PARAMS::::", params)
-        //console.log("BODY:::", body);
-        //console.log("HEADERS::::", headers)
-
-        // Didn't need this as we now use validate in vod instead of our own validation.
-        //var filteredBooks: Promise<object> = listBooks([{ "from": from, "to": to }]);
-        //var filteredBooks: Promise<object> = assignment1.listBooks(books, [{ "from": query.from, "to": query.to }]);
-        //var filteredBooks: Promise<object> = assignment2.listBooks([{ "from": query.from, "to": query.to }]);
-
         var filteredBooks: Array<object> = [];
         //if (query === undefined) { return; }
 
         // Loop through all books and filters, only return the books that match the indicated filters.
         books?.map((book: object | any) => {
 
-            // if (typeof (query) === "object") {
-            //  if (query != undefined) { ; 
-            // query?.map((filter: object | any) => {
-            // DEBUG
-            //console.log("FROM::::::::", filter.from, "TO:::::::", filter.to);
-            //console.log("CURRENT BOOOK...........", book);
-            // Check the current book if it matches the current filter, if so, push that book onto array.
             if (book.price <= query.to && book.price >= query.from) {
-                //console.log("A MATCH:::::", book.price);
                 filteredBooks.push(book);
                 //book.display = true;
             }
-            /*
-            for (const key in filteredBooks) {
-             
-                console.log("value", filteredBooks[key]);
-            }*/
         })
 
-        //console.log("DISPLAY............", books?.display)
-        /*
-        filteredBooks.map((book) => {
-            console.log("BOOOOOOOOOOOOOOOOK", book)
-        })
-        */
         ctx.response.status = 200;
         ///ctx.response.body = { books }
         //ctx.response.body = { ...filteredBooks }
@@ -129,12 +82,10 @@ router.register({
     handler: async (ctx, next) => {
         let { body, headers, query, params } = ctx.request;
 
-        /* books?.map((book: object | any) => {
-         assignment2.createOrUpdateBook(book);
-         });*/
-
+        // Fetch all books from MongoDB
         var result = await Book.find({})
 
+        // Display all books if fetch was successful.
         if (result) {
             console.log(`Fetching document successful.`);
             ctx.response.body = { result }
@@ -158,10 +109,7 @@ router.register({
         console.log("..........DEBUG - CREATE NEW BOOK RECEIVED..........");
         */
 
-        /* books?.map((book: object | any) => {
-         assignment2.createOrUpdateBook(book);
-         });*/
-
+        // Create the new book in mongoDB with supplied parameters.
         var result = await Book.create({
             // id: query.id,
             name: query.name,
@@ -171,9 +119,7 @@ router.register({
             image: query.image
         })
 
-        // List all documents.
-        //console.log(await Book.find({}));
-
+        // Check if we successed in creating a new book or not.
         if (result) {
             let resp = `Book was created successfully id: ${query.id}`;
             console.log(resp);
@@ -204,21 +150,13 @@ router.register({
     path: '/books',
     handler: async (ctx, next) => {
         let { body, headers, query, params } = ctx.request;
-        // const id: string = query.from.id;
-
-        /* books?.map((book: object | any) => {
-         assignment2.createOrUpdateBook(book);
-         });*/
 
         var result = await Book.findOneAndUpdate({ id: query.id }, { price: query.price })
 
-        /*const doc = await Book.findById(query.id);
-        doc.price = query.price;
-        await doc.save();
-*/
         // List all documents.
         //console.log(await Book.find({}));
 
+        // Check if we were successful in updating a book by price or not.
         if (result) {
             let resp = `Book id ${query.id}, price has been adjusted to ${query.price}:`
             console.log(resp);
@@ -249,10 +187,7 @@ router.register({
     handler: async (ctx, next) => {
         let { body, headers, query, params } = ctx.request;
 
-        /* books?.map((book: object | any) => {
-         assignment2.createOrUpdateBook(book);
-         });*/
-
+        // Delete the book by id.
         var result = await Book.deleteOne({
             id: query.id
         })
@@ -265,6 +200,7 @@ router.register({
         // List all documents.
         //console.log(await Book.find({}));
 
+        // Check if we successed in deleting book by id.
         if (result.deletedCount >= 1) {
             let resp = `Book id ${query.id}, has been removed.:`
             console.log(resp);
@@ -295,3 +231,52 @@ app.listen(3000, () => {
 });
 
 app.use(cors)
+
+
+
+/* Un-needed code - Assignment 1 - fetch all books
+        // Query is always of type string. We don't have control over that, so I wrote the following code which works. But it is not susitable for this use-case scenario because query would always be of type string, not set by us. But by the framework koa-zod-router I believe.
+        
+        if (typeof (query.from) != 'number' || typeof (query.to) == 'number') {
+            var error: string = "Invalid input. From or To filter is not of type number. Needs to be of type number.";
+            ctx.body = { error }
+            throw new TypeError(error);
+        }
+
+         We ended up not needing this as we figuered out how to use validate in zod.
+         Convert type string to type number.
+        var from: number = +`${query.from}`;
+        var to: number = +`${query.to}`;
+
+         DEBUG
+            console.log("PARAMS::::", params)
+            console.log("BODY:::", body);
+            console.log("HEADERS::::", headers)
+
+         Didn't need this as we now use validate in vod instead of our own validation.
+        var filteredBooks: Promise<object> = listBooks([{ "from": from, "to": to }]);
+        var filteredBooks: Promise<object> = assignment1.listBooks(books, [{ "from": query.from, "to": query.to }]);
+        var filteredBooks: Promise<object> = assignment2.listBooks([{ "from": query.from, "to": query.to }]);
+
+        --- Inside books.map ---
+              if (typeof (query) === "object") {
+              if (query != undefined) { ; 
+             query?.map((filter: object | any) => {
+            DEBUG
+                console.log("FROM::::::::", filter.from, "TO:::::::", filter.to);
+                console.log("CURRENT BOOOK...........", book);
+            Check the current book if it matches the current filter, if so, push that book onto array.
+
+                        
+            for (const key in filteredBooks) {
+             
+                console.log("value", filteredBooks[key]);
+            }
+        ---- After books.map -----
+        console.log("DISPLAY............", books?.display)
+        
+        filteredBooks.map((book) => {
+            console.log("BOOOOOOOOOOOOOOOOK", book)
+        })
+        
+*/

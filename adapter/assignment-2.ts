@@ -28,34 +28,41 @@ async function listBooks(filters?: Array<{ from?: number, to?: number }>): Promi
     if (filters === undefined) { return []; }
     var defaultFilterFrom = 0;
     var defaultFilterTo = 100;
-    //if (filters === undefined) { filters[0].from = 10 }
+
+    // Set our fetch URL based upon supplied from and to query.
+    // If no from or to query exists, create a default value.
+    // This prevents fatal TypeError from crashing our application
+    // when no from or to query is provided.
     if (filters.length >= 1) {
         const errors = validationSchema.validate(filters[0]);
         var fetchUrl = `http://localhost:3000/booksList?from=${filters[0].from}&to=${filters[0].to}`
     } else {
         var fetchUrl = `http://localhost:3000/booksList?from=${defaultFilterFrom}&to=${defaultFilterTo}`
     }
-    //console.log(`Filters BOTH.... from: ${filters[0].from} TO: ${filters[0].to}`);
-    //console.log("type of filters", typeof (filters));
-    //console.log("Array?", typeof ([]));
-    //console.log("filters [0] FROM", filters[0].from);
-    //console.log("filters [0] TO", filters[0].to);
-    //console.log("Axios fetching.....");
+
+    /* DEBUG 
+        console.log(`Filters BOTH.... from: ${filters[0].from} TO: ${filters[0].to}`);
+        console.log("type of filters", typeof (filters));
+        console.log("Array?", typeof ([]));
+        console.log("filters [0] FROM", filters[0].from);
+        console.log("filters [0] TO", filters[0].to);
+    */
 
     //var filteredBooks: Array<object> = [];
     var Books: Array<object> = [];
     //var data: Array<object> = [];
     //var someBooks: myBooks[] = [];
-    // Should await the fetch itself.
-    // Have the fetch itself return the book as an book array
 
+    /* Instructor comments:
+            Should await the fetch itself.
+            Have the fetch itself return the book as an book array
+    */
     fetch(`${fetchUrl}`)
         .then(res => res.json())
         .then((data: object | any) => {
             console.log("FETCH RESPONSE.......", data);
             Books.push(data.filteredBooks)
             //Books = data;
-
             // someBooks.push(data.filteredBooks[0])
             //console.log("------data---------", someBooks)
         }).catch((err) => {
@@ -68,14 +75,16 @@ async function listBooks(filters?: Array<{ from?: number, to?: number }>): Promi
     ///return [];
     return (await Books as Book[])
 
-    // Create interface like book api return
-    // Write out a type defintion
-    // Define a type that matches what you are returning from server
-    // Cast the data as that type.
-    // After defining type you can modify data.filteredBooks
-    // Try to avoid | any in the future if possible
-    // The way you decide to build you json is up to you
-    // Focus on good structure otherwise
+    /* Instructor comments:
+        Create interface like book api return
+        Write out a type defintion
+        Define a type that matches what you are returning from server
+        Cast the data as that type.
+        After defining type you can modify data.filteredBooks
+        Try to avoid | any in the future if possible
+        The way you decide to build you json is up to you
+        Focus on good structure otherwise
+    */
 
     //var test = { filteredBooks: Book[] }
     // var abook = [{ "name": "Steve", "author": "Jim" }]
