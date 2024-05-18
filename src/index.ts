@@ -30,9 +30,6 @@ router.register({
     path: '/booksList',
     handler: async (ctx, next) => {
         let { body, headers, query, params } = ctx.request;
-        // DEBUG
-        //console.log("QUERY:::", query);
-        //console.log("type of query::::", typeof (query.from));
 
         // Query is always of type string. We don't have control over that, so I wrote the following code which works. But it is not susitable for this use-case scenario because query would always be of type string, not set by us. But by the framework koa-zod-router I believe.
         /*
@@ -41,25 +38,26 @@ router.register({
             ctx.body = { error }
             throw new TypeError(error);
         }*/
+
         // We ended up not needing this as we figuered out how to use validate in zod.
         // Convert type string to type number.
         //var from: number = +`${query.from}`;
         //var to: number = +`${query.to}`;
+
         // DEBUG
         //console.log("PARAMS::::", params)
         //console.log("BODY:::", body);
         //console.log("HEADERS::::", headers)
+
         // Didn't need this as we now use validate in vod instead of our own validation.
         //var filteredBooks: Promise<object> = listBooks([{ "from": from, "to": to }]);
         //var filteredBooks: Promise<object> = assignment1.listBooks(books, [{ "from": query.from, "to": query.to }]);
         //var filteredBooks: Promise<object> = assignment2.listBooks([{ "from": query.from, "to": query.to }]);
-        //console.log("\n\nAssignment1 from to FETCH receieved.\n\n")
-        console.log("QUERY...........", query.from, query.to)
-        // Assignment 1
+
         var filteredBooks: Array<object> = [];
-        // Loop through all books and filters, only return the books that match the indicated filters.
-        //console.log("BOOKS", books)
         //if (query === undefined) { return; }
+
+        // Loop through all books and filters, only return the books that match the indicated filters.
         books?.map((book: object | any) => {
 
             // if (typeof (query) === "object") {
@@ -79,13 +77,6 @@ router.register({
              
                 console.log("value", filteredBooks[key]);
             }*/
-
-
-            //ctx.response.body =
-            //}
-            // })
-            // DEBUG
-            //console.log(book);
         })
 
         //console.log("DISPLAY............", books?.display)
@@ -94,17 +85,11 @@ router.register({
             console.log("BOOOOOOOOOOOOOOOOK", book)
         })
         */
-        //ctx.response.status = 200;
+        ctx.response.status = 200;
         ///ctx.response.body = { books }
         //ctx.response.body = { ...filteredBooks }
         ctx.response.body = { filteredBooks }
-        // Send the filtered book list as json back to the user
-        //filteredBooks.then((value) => {
-        // console.log("value:::::::::", value);
-        //  ctx.response.body = { value }
-        // })
-        // DEBUG
-        //console.log("FILTERED BOOKS::::::::::", filteredBooks);
+
         //return filteredBooks;
         await next();
     },
@@ -150,9 +135,6 @@ router.register({
 
         var result = await Book.find({})
 
-        // Delete this later. List all documents.
-        console.log();
-
         if (result) {
             console.log(`Fetching document successful.`);
             ctx.response.body = { result }
@@ -170,10 +152,12 @@ router.register({
     path: '/books',
     handler: async (ctx, next) => {
         let { body, headers, query, params } = ctx.request;
-        // const id: string = query.from.id;
-        console.log("..........CREATE NEW BOOK RECEIVED..........");
-        console.log("..........CREATE NEW BOOK RECEIVED..........");
-        console.log("..........CREATE NEW BOOK RECEIVED..........");
+        /*
+        console.log("..........DEBUG - CREATE NEW BOOK RECEIVED..........");
+        console.log("..........DEBUG - CREATE NEW BOOK RECEIVED..........");
+        console.log("..........DEBUG - CREATE NEW BOOK RECEIVED..........");
+        */
+
         /* books?.map((book: object | any) => {
          assignment2.createOrUpdateBook(book);
          });*/
@@ -187,8 +171,8 @@ router.register({
             image: query.image
         })
 
-        // Delete this later. List all documents.
-        console.log(await Book.find({}));
+        // List all documents.
+        //console.log(await Book.find({}));
 
         if (result) {
             let resp = `Book was created successfully id: ${query.id}`;
@@ -221,21 +205,19 @@ router.register({
     handler: async (ctx, next) => {
         let { body, headers, query, params } = ctx.request;
         // const id: string = query.from.id;
-        console.log("type of id,", typeof (query.id))
-        console.log("Create new book. ID::::::.", query.id);
-        console.log("Create new book. AUTHOR::::::.", query.author);
 
         /* books?.map((book: object | any) => {
          assignment2.createOrUpdateBook(book);
          });*/
 
         var result = await Book.findOneAndUpdate({ id: query.id }, { price: query.price })
+
         /*const doc = await Book.findById(query.id);
         doc.price = query.price;
         await doc.save();
 */
-        // Delete this later. List all documents.
-        console.log(await Book.find({}));
+        // List all documents.
+        //console.log(await Book.find({}));
 
         if (result) {
             let resp = `Book id ${query.id}, price has been adjusted to ${query.price}:`
@@ -274,12 +256,14 @@ router.register({
         var result = await Book.deleteOne({
             id: query.id
         })
+
         /*const doc = await Book.findById(query.id);
         doc.price = query.price;
         await doc.save();
-*/
-        // Delete this later. List all documents.
-        console.log(await Book.find({}));
+        */
+
+        // List all documents.
+        //console.log(await Book.find({}));
 
         if (result.deletedCount >= 1) {
             let resp = `Book id ${query.id}, has been removed.:`

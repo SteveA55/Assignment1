@@ -1,12 +1,6 @@
 import assignment1 from "./assignment-1";
-//const mongoose = require("mongoose");
-//import zodRouter from 'koa-zod-router';
-//const router = zodRouter();
 import axios from "axios";
 import * as Yup from "yup";
-import { arrayOutputType } from "zod";
-
-
 
 export type BookID = string;
 
@@ -22,10 +16,6 @@ export interface Book {
 interface myBooks {
     filteredBooks: Book,
 }
-
-console.log("mcmasterful-books?????")
-//var filters = [{ "from": 5, "to": 10 }]
-//listBooks(filters)
 
 
 async function listBooks(filters?: Array<{ from?: number, to?: number }>): Promise<Book[]> {
@@ -109,15 +99,7 @@ async function listBooks(filters?: Array<{ from?: number, to?: number }>): Promi
 async function createOrUpdateBook(book: Book): Promise<BookID> {
     console.log("GET all books...");
     console.log("...........Book............", book)
-    /*
-    axios(`http://localhost:3000/books?${book}`, {
-        method: "POST"
-    }).then((response) => {
-        console.log("RESPONSE:::::", response.data);
-    }).catch((err) => {
-        console.log("ERR:::::", err);
-    })
-    */
+
     console.log("--------------DECODED-------------------", decodeURI(JSON.stringify(book)));
     var bookParams: string = decodeURI(JSON.stringify(book));
     var result: Book | any = fetch(`http://localhost:3000/books?${bookParams}`, {
@@ -153,3 +135,15 @@ export default {
     removeBook,
     listBooks
 };
+
+
+// Code not used
+/*
+axios(`http://localhost:3000/books?${book}`, {
+    method: "POST"
+}).then((response) => {
+    console.log("RESPONSE:::::", response.data);
+}).catch((err) => {
+    console.log("ERR:::::", err);
+})
+*/
