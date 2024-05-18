@@ -89,9 +89,11 @@ router.register({
         })
 
         //console.log("DISPLAY............", books?.display)
+        /*
         filteredBooks.map((book) => {
             console.log("BOOOOOOOOOOOOOOOOK", book)
         })
+        */
         //ctx.response.status = 200;
         ///ctx.response.body = { books }
         //ctx.response.body = { ...filteredBooks }
@@ -169,16 +171,15 @@ router.register({
     handler: async (ctx, next) => {
         let { body, headers, query, params } = ctx.request;
         // const id: string = query.from.id;
-        console.log("type of id,", typeof (query.id))
-        console.log("Create new book. ID::::::.", query.id);
-        console.log("Create new book. AUTHOR::::::.", query.author);
-
+        console.log("..........CREATE NEW BOOK RECEIVED..........");
+        console.log("..........CREATE NEW BOOK RECEIVED..........");
+        console.log("..........CREATE NEW BOOK RECEIVED..........");
         /* books?.map((book: object | any) => {
          assignment2.createOrUpdateBook(book);
          });*/
 
         var result = await Book.create({
-            id: query.id,
+            // id: query.id,
             name: query.name,
             author: query.author,
             description: query.description,
@@ -204,7 +205,8 @@ router.register({
     validate: {
         // Validate input. Make sure we are working with type number and not type string as an example.
         query: z.object({
-            id: z.coerce.number(), name: z.string(),
+            // id: z.coerce.number(), name: z.string(),
+            name: z.string(),
             author: z.string(), description: z.string(),
             price: z.coerce.number(), image: z.string()
         }),

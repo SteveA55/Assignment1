@@ -108,14 +108,28 @@ async function listBooks(filters?: Array<{ from?: number, to?: number }>): Promi
 
 async function createOrUpdateBook(book: Book): Promise<BookID> {
     console.log("GET all books...");
-    axios(`http://localhost:3000/books`, {
+    console.log("...........Book............", book)
+    /*
+    axios(`http://localhost:3000/books?${book}`, {
         method: "POST"
     }).then((response) => {
         console.log("RESPONSE:::::", response.data);
     }).catch((err) => {
         console.log("ERR:::::", err);
     })
-    throw new Error("Todo")
+    */
+    console.log("--------------DECODED-------------------", decodeURI(JSON.stringify(book)));
+    var bookParams: Book | string = decodeURI(JSON.stringify(book));
+    var result: Book | any = fetch(`http://localhost:3000/books?${bookParams}`, {
+        method: "POST"
+    }).then(res => res.json())
+        .then((data: object | any) => {
+            console.log("........data........", data)
+        }).catch((err) => {
+            console.log("FETCH ERROR.........", err)
+        })
+    //throw new Error("Todo")
+    return (await result)
 }
 
 async function removeBook(book: BookID): Promise<void> {
