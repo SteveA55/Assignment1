@@ -39,12 +39,16 @@ router.register({
         })
 
         ctx.response.status = 200;
-        ///ctx.response.body = { books }
-        //ctx.response.body = { ...filteredBooks }
-        //console.log("----- Sending back filteredBooks list-----------");
         ctx.response.body = { filteredBooks }
 
-        //return filteredBooks;
+        /* Un-used code we may want to revisit later.
+                ctx.response.body = { books }
+                ctx.response.body = { ...filteredBooks }
+                console.log("----- Sending back filteredBooks list-----------");
+                 return filteredBooks;
+       */
+
+
         await next();
     },
     validate: {
@@ -104,11 +108,6 @@ router.register({
     path: '/books',
     handler: async (ctx, next) => {
         let { body, headers, query, params } = ctx.request;
-        /*
-        console.log("..........DEBUG - CREATE NEW BOOK RECEIVED..........");
-        console.log("..........DEBUG - CREATE NEW BOOK RECEIVED..........");
-        console.log("..........DEBUG - CREATE NEW BOOK RECEIVED..........");
-        */
 
         // Create the new book in mongoDB with supplied parameters.
         var result = await Book.create({
@@ -154,9 +153,6 @@ router.register({
 
         var result = await Book.findOneAndUpdate({ id: query.id }, { price: query.price })
 
-        // List all documents.
-        //console.log(await Book.find({}));
-
         // Check if we were successful in updating a book by price or not.
         if (result) {
             let resp = `Book id ${query.id}, price has been adjusted to ${query.price}:`
@@ -193,14 +189,6 @@ router.register({
             id: query.id
         })
 
-        /*const doc = await Book.findById(query.id);
-        doc.price = query.price;
-        await doc.save();
-        */
-
-        // List all documents.
-        //console.log(await Book.find({}));
-
         // Check if we successed in deleting book by id.
         if (result.deletedCount >= 1) {
             let resp = `Book id ${query.id}, has been removed.:`
@@ -235,7 +223,7 @@ app.use(cors)
 
 
 
-/* Un-needed code - Assignment 1 - fetch all books
+/* Un-needed code - we may want to re-introduce later. - Assignment 1 - fetch all books
         // Query is always of type string. We don't have control over that, so I wrote the following code which works. But it is not susitable for this use-case scenario because query would always be of type string, not set by us. But by the framework koa-zod-router I believe.
         
         if (typeof (query.from) != 'number' || typeof (query.to) == 'number') {

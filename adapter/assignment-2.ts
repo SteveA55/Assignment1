@@ -111,7 +111,7 @@ async function listBooks(filters?: Array<{ from?: number, to?: number }>): Promi
           return (await someBooks as Book[]);
       */
 
-    /* DEBUG - hardcoded data
+    /* DEBUG - hardcoded data, may we want to debug this again later.
       var abook: any = [
           {
               "name": "Appointment with Death",
@@ -134,9 +134,11 @@ async function listBooks(filters?: Array<{ from?: number, to?: number }>): Promi
 }
 
 async function createOrUpdateBook(book: Book): Promise<BookID> {
-    console.log("GET all books...");
+
+    // DEBUG
     console.log("...........Book............", book)
 
+    // Unable to get it working with de-coded OR en-coded url params.
     console.log("--------------DECODED-------------------", decodeURI(JSON.stringify(book)));
     var bookParams: string = decodeURI(JSON.stringify(book));
     var result: Book | any = fetch(`http://localhost:3000/books?${bookParams}`, {
@@ -152,7 +154,10 @@ async function createOrUpdateBook(book: Book): Promise<BookID> {
 }
 
 async function removeBook(book: BookID): Promise<void> {
+
+    // DEBUG
     console.log("---------(REMOVE) BOOK ID----------", book)
+
     var result: Promise<void> = fetch(`http://localhost:3000/books?${book}`, {
         method: "DELETE"
     }).then(res => res.json())
@@ -175,7 +180,7 @@ export default {
 };
 
 
-// Code not used
+// Code not used - but may re-introduce later.
 /*
 axios(`http://localhost:3000/books?${book}`, {
     method: "POST"
