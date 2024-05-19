@@ -111,7 +111,7 @@ router.register({
 
         // Create the new book in mongoDB with supplied parameters.
         var result = await Book.create({
-            // id: query.id,
+            id: query.id,
             name: query.name,
             author: query.author,
             description: query.description,
@@ -209,6 +209,7 @@ router.register({
             id: z.coerce.number()
         }),
     },
+
 });
 
 
