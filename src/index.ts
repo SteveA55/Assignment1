@@ -41,6 +41,7 @@ router.register({
         ctx.response.status = 200;
         ///ctx.response.body = { books }
         //ctx.response.body = { ...filteredBooks }
+        //console.log("----- Sending back filteredBooks list-----------");
         ctx.response.body = { filteredBooks }
 
         //return filteredBooks;

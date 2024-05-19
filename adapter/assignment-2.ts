@@ -20,7 +20,7 @@ interface myBooks {
 
 async function listBooks(filters?: Array<{ from?: number, to?: number }>): Promise<Book[]> {
 
-    //console.log("Filters [1]....", filters[1]) // undefined
+    // console.log("Filters [1]....", filters[1]) // undefined
     const validationSchema = Yup.object({
         from: Yup.number().required().positive(),
         to: Yup.number().optional().positive()
@@ -29,10 +29,12 @@ async function listBooks(filters?: Array<{ from?: number, to?: number }>): Promi
     var defaultFilterFrom = 0;
     var defaultFilterTo = 100;
 
-    // Set our fetch URL based upon supplied from and to query.
-    // If no from or to query exists, create a default value.
-    // This prevents fatal TypeError from crashing our application
-    // when no from or to query is provided.
+    /*
+     Set our fetch URL based upon supplied from and to query.
+     If no from or to query exists, create a default value.
+     This prevents fatal TypeError from crashing our application
+     when no from or to query is provided.
+    */
     if (filters.length >= 1) {
         const errors = validationSchema.validate(filters[0]);
         var fetchUrl = `http://localhost:3000/booksList?from=${filters[0].from}&to=${filters[0].to}`
@@ -40,7 +42,7 @@ async function listBooks(filters?: Array<{ from?: number, to?: number }>): Promi
         var fetchUrl = `http://localhost:3000/booksList?from=${defaultFilterFrom}&to=${defaultFilterTo}`
     }
 
-    /* DEBUG 
+    /* DEBUG - We may want to debug with this again later.
         console.log(`Filters BOTH.... from: ${filters[0].from} TO: ${filters[0].to}`);
         console.log("type of filters", typeof (filters));
         console.log("Array?", typeof ([]));
@@ -48,10 +50,15 @@ async function listBooks(filters?: Array<{ from?: number, to?: number }>): Promi
         console.log("filters [0] TO", filters[0].to);
     */
 
-    //var filteredBooks: Array<object> = [];
-    var Books: Array<object> = [];
-    //var data: Array<object> = [];
-    //var someBooks: myBooks[] = [];
+    var Books: any = [];
+    /*  Un-used code but we may want to re-try these potential solutions later.
+        var filteredBooks: Array<object> = [];
+        var Books: Array<object> = [];
+        var Books: Book[] = [];
+
+        var data: Array<object> = [];
+        var someBooks: myBooks[] = [];
+        */
 
     /* Instructor comments:
             Should await the fetch itself.
@@ -61,19 +68,30 @@ async function listBooks(filters?: Array<{ from?: number, to?: number }>): Promi
         .then(res => res.json())
         .then((data: object | any) => {
             console.log("FETCH RESPONSE.......", data);
+            data.filteredBooks.map((eachBook: object | any) => {
+                Books.push(eachBook);
+                console.log("-----------ALLL BOOKS-------------", Books)
+            })
+            /* Un-used code but we may want to re-try these potential solutions later.
             Books.push(data.filteredBooks)
-            //Books = data;
-            // someBooks.push(data.filteredBooks[0])
-            //console.log("------data---------", someBooks)
+            Books = data;
+            someBooks.push(data.filteredBooks[0])
+            console.log("------data---------", someBooks)
+            */
         }).catch((err) => {
             console.log("FETCH ERROR.........", err)
         })
-    // console.log("RESULT OF FETCH.......................", resultFetch);
-    //return assignment1.listBooks(filters);
-    //return listBooks(filters);
-    //return (await Books);
-    ///return [];
-    return (await Books as Book[])
+    /* Un-used code but we may want to re-try these potential solutions later.
+          console.log("RESULT OF FETCH.......................", resultFetch);
+          return assignment1.listBooks(filters);
+          return listBooks(filters);
+          return (await Books);
+          return [];
+          return (await Books.map((eachBook) => { return eachBook }) as Book[])
+          return (await JSON.parse(Books) as Book[])
+          */
+    console.log("---------is the value present right now---------", Books);
+    return (Books as Book[])
 
     /* Instructor comments:
         Create interface like book api return
@@ -86,23 +104,33 @@ async function listBooks(filters?: Array<{ from?: number, to?: number }>): Promi
         Focus on good structure otherwise
     */
 
-    //var test = { filteredBooks: Book[] }
-    // var abook = [{ "name": "Steve", "author": "Jim" }]
-    //console.log("Before returning books....................", Books)
-    //return (await someBooks as Book[]);
-    /* var abook: any = [{
- 
- 
-         "name": "Appointment with Death",
-         "author": "Agatha Christie",
-         "description": "In this exclusive authorized edition from the Queen of Mystery, the unstoppable Hercule Poirot finds himself in the Middle East with only one day to solve a murder..",
-         "price": 19.63,
-         "image": "https://upload.wikimedia.org/wikipedia/en/thumb/c/cc/Appointment_with_Death_First_Edition_Cover_1938.jpg/220px-Appointment_with_Death_First_Edition_Cover_1938.jpg"
- 
- 
-     }]
- */
-    //return (await abook as Book[])
+    /* Un-used code but we may want to re-try these potential solutions later.
+          var test = { filteredBooks: Book[] }
+          var abook = [{ "name": "Steve", "author": "Jim" }]
+          console.log("Before returning books....................", Books)
+          return (await someBooks as Book[]);
+      */
+
+    /* DEBUG - hardcoded data
+      var abook: any = [
+          {
+              "name": "Appointment with Death",
+              "author": "Agatha Christie",
+              "description": "In this exclusive authorized edition from the Queen of Mystery, the unstoppable Hercule Poirot finds himself in the Middle East with only one day to solve a murder..",
+              "price": 19.63,
+              "image": "https://upload.wikimedia.org/wikipedia/en/thumb/c/cc/Appointment_with_Death_First_Edition_Cover_1938.jpg/220px-Appointment_with_Death_First_Edition_Cover_1938.jpg"
+          },
+          {
+              "name": "Appointment with Death",
+              "author": "Agatha Christie",
+              "description": "In this exclusive authorized edition from the Queen of Mystery, the unstoppable Hercule Poirot finds himself in the Middle East with only one day to solve a murder..",
+              "price": 19.63,
+              "image": "https://upload.wikimedia.org/wikipedia/en/thumb/c/cc/Appointment_with_Death_First_Edition_Cover_1938.jpg/220px-Appointment_with_Death_First_Edition_Cover_1938.jpg"
+          }
+      ]
+      console.log("---------A BOOK (dummy data)----------", abook)
+      return (await abook as Book[])
+*/
 }
 
 async function createOrUpdateBook(book: Book): Promise<BookID> {
@@ -125,7 +153,7 @@ async function createOrUpdateBook(book: Book): Promise<BookID> {
 
 async function removeBook(book: BookID): Promise<void> {
     console.log("---------(REMOVE) BOOK ID----------", book)
-    var result: Book | any = fetch(`http://localhost:3000/books?${book}`, {
+    var result: Promise<void> = fetch(`http://localhost:3000/books?${book}`, {
         method: "DELETE"
     }).then(res => res.json())
         .then((data: object | any) => {
@@ -134,6 +162,7 @@ async function removeBook(book: BookID): Promise<void> {
             console.log("FETCH ERROR.........", err)
         })
     //throw new Error("Todo")
+    return result;
 }
 
 const assignment = "assignment-2";
