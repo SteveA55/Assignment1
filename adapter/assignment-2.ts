@@ -50,7 +50,8 @@ async function listBooks(filters?: Array<{ from?: number, to?: number }>): Promi
         console.log("filters [0] TO", filters[0].to);
     */
 
-    var Books: any = [];
+    //var Books: any = [];
+    var Books: Book[] = [];
     /*  Un-used code but we may want to re-try these potential solutions later.
         var filteredBooks: Array<object> = [];
         var Books: Array<object> = [];
@@ -68,7 +69,7 @@ async function listBooks(filters?: Array<{ from?: number, to?: number }>): Promi
         .then(res => res.json())
         .then((data: object | any) => {
             console.log("FETCH RESPONSE.......", data);
-            data.filteredBooks.map((eachBook: object | any) => {
+            data.filteredBooks.map((eachBook: Book) => {
                 Books.push(eachBook);
                 console.log("-----------ALLL BOOKS-------------", Books)
             })
@@ -91,7 +92,7 @@ async function listBooks(filters?: Array<{ from?: number, to?: number }>): Promi
           return (await JSON.parse(Books) as Book[])
           */
     console.log("---------is the value present right now---------", Books);
-    return (Books as Book[])
+    return (await Books as Book[])
 
     /* Instructor comments:
         Create interface like book api return
