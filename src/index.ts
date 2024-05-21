@@ -14,7 +14,7 @@ const mongoose = require("mongoose");
 
 app.use(cors())
 
-var books: Array<object> = JSON.parse(fs.readFileSync(`./mcmasteful-book-list.json`, 'utf8'));
+const books: Array<object> = JSON.parse(fs.readFileSync(`./mcmasteful-book-list.json`, 'utf8'));
 
 //console.log("Assignment1,,,,,,,,", assignment1)
 
@@ -24,9 +24,9 @@ router.register({
     method: 'get',
     path: '/booksList',
     handler: async (ctx, next) => {
-        let { body, headers, query, params } = ctx.request;
+        const { body, headers, query, params } = ctx.request;
 
-        var filteredBooks: Array<object> = [];
+        const filteredBooks: Array<object> = [];
         //if (query === undefined) { return; }
 
         // Loop through all books and filters, only return the books that match the indicated filters.
@@ -85,10 +85,10 @@ router.register({
     method: 'get',
     path: '/books',
     handler: async (ctx, next) => {
-        let { body, headers, query, params } = ctx.request;
+        const { body, headers, query, params } = ctx.request;
 
         // Fetch all books from MongoDB
-        var result = await Book.find({})
+        const result = await Book.find({})
 
         // Display all books if fetch was successful.
         if (result) {
@@ -107,10 +107,10 @@ router.register({
     method: 'post',
     path: '/books',
     handler: async (ctx, next) => {
-        let { body, headers, query, params } = ctx.request;
+        const { body, headers, query, params } = ctx.request;
 
         // Create the new book in mongoDB with supplied parameters.
-        var result = await Book.create({
+        const result = await Book.create({
             id: query.id,
             name: query.name,
             author: query.author,
@@ -121,12 +121,12 @@ router.register({
 
         // Check if we successed in creating a new book or not.
         if (result) {
-            let resp = `Book was created successfully id: ${query.id}`;
+            const resp = `Book was created successfully id: ${query.id}`;
             console.log(resp);
             ctx.response.body = { resp }
         }
         else {
-            let resp = `Failed to create new book id: ${query.id}.`
+            const resp = `Failed to create new book id: ${query.id}.`
             console.log(resp);
             ctx.response.body = { resp }
         }
@@ -149,18 +149,18 @@ router.register({
     method: 'patch',
     path: '/books',
     handler: async (ctx, next) => {
-        let { body, headers, query, params } = ctx.request;
+        const { body, headers, query, params } = ctx.request;
 
-        var result = await Book.findOneAndUpdate({ id: query.id }, { price: query.price })
+        const result = await Book.findOneAndUpdate({ id: query.id }, { price: query.price })
 
         // Check if we were successful in updating a book by price or not.
         if (result) {
-            let resp = `Book id ${query.id}, price has been adjusted to ${query.price}:`
+            const resp = `Book id ${query.id}, price has been adjusted to ${query.price}:`
             console.log(resp);
             ctx.response.body = { resp }
         }
         else {
-            let resp = `Failed to update book by price.`
+            const resp = `Failed to update book by price.`
             console.log(resp);
             ctx.response.body = { resp }
         }
@@ -182,21 +182,21 @@ router.register({
     method: 'delete',
     path: '/books',
     handler: async (ctx, next) => {
-        let { body, headers, query, params } = ctx.request;
+        const { body, headers, query, params } = ctx.request;
 
         // Delete the book by id.
-        var result = await Book.deleteOne({
+        const result = await Book.deleteOne({
             id: query.id
         })
 
         // Check if we successed in deleting book by id.
         if (result.deletedCount >= 1) {
-            let resp = `Book id ${query.id}, has been removed.:`
+            const resp = `Book id ${query.id}, has been removed.:`
             console.log(resp);
             ctx.response.body = { resp }
         }
         else {
-            let resp = `Failed to remove book (${query.id}).`
+            const resp = `Failed to remove book (${query.id}).`
             console.log(resp);
             ctx.response.body = { resp }
         }

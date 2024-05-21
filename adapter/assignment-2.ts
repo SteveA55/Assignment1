@@ -26,8 +26,8 @@ async function listBooks(filters?: Array<{ from?: number, to?: number }>): Promi
         to: Yup.number().optional().positive()
     });
     if (filters === undefined) { return []; }
-    var defaultFilterFrom = 0;
-    var defaultFilterTo = 100;
+    const defaultFilterFrom = 0;
+    const defaultFilterTo = 100;
 
     /*
      Set our fetch URL based upon supplied from and to query.
@@ -51,7 +51,7 @@ async function listBooks(filters?: Array<{ from?: number, to?: number }>): Promi
     */
 
     //var Books: any = [];
-    var Books: Book[] = [];
+    const Books: Book[] = [];
     /*  Un-used code but we may want to re-try these potential solutions later.
         var filteredBooks: Array<object> = [];
         var Books: Array<object> = [];
@@ -141,8 +141,8 @@ async function createOrUpdateBook(book: Book): Promise<BookID> {
 
     // Unable to get it working with de-coded OR en-coded url params.
     console.log("--------------DECODED-------------------", decodeURI(JSON.stringify(book)));
-    var bookParams: string = decodeURI(JSON.stringify(book));
-    var result: Book | any = fetch(`http://localhost:3000/books?${bookParams}`, {
+    const bookParams: string = decodeURI(JSON.stringify(book));
+    const result: Book | any = fetch(`http://localhost:3000/books?${bookParams}`, {
         method: "POST"
     }).then(res => res.json())
         .then((data: object | any) => {
@@ -159,7 +159,7 @@ async function removeBook(book: BookID): Promise<void> {
     // DEBUG
     console.log("---------(REMOVE) BOOK ID----------", book)
 
-    var result: Promise<void> = fetch(`http://localhost:3000/books?${book}`, {
+    const result: Promise<void> = fetch(`http://localhost:3000/books?${book}`, {
         method: "DELETE"
     }).then(res => res.json())
         .then((data: object | any) => {

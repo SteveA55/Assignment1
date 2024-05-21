@@ -30,7 +30,7 @@ axios("http://localhost:3000/booksList?from=5&to=30", {
 // If you have multiple filters, a book matching any of them is a match.
 async function listBooks(books?: Array<object>, filters?: Array<{ from?: number, to?: number }>): Promise<Book[]> {
 
-    var filteredBooks: Array<object> = [];
+    const filteredBooks: Array<object> = [];
 
     // Loop through all books and filters, only return the books that match the indicated filters.
     books?.map((book: object | any) => {
