@@ -56,33 +56,38 @@ async function listBooks(filters?: Filter[]): Promise<Book[]> {
     //var fetchUrl: string = "";
     //fetchUrl = `http://localhost:3000/booksFilters?${filters}`;
     //console.log("DEBUG starting fetch...........", fetchUrl);
+    console.log("-------HOW MANY FILTERS?------", filters.length)
+
+    var baseUrl: string = "http://localhost:3000/booksFilters?";
+    var fetchUrl: string | undefined = `${baseUrl}`;
+    var howManyFilters: number | undefined = filters.length;
+    // Loop through each filter and sent the params matching the filter that is supplied to the backend.
     filters.map((eachFilter, index) => {
-      var fetchUrl: string = "";
-      var baseUrl: string = "http://localhost:3000/booksFilters";
+
       //console.log("------- EACH FILTER--------", eachFilter.author)
-      if (eachFilter.author) { fetchUrl = `${baseUrl}?author=${eachFilter.author}`; }
-      else if (eachFilter.name) { fetchUrl = `${baseUrl}?name=${eachFilter.name}`; }
+      if (eachFilter.author) { fetchUrl += `&author=${eachFilter.author}`; }
+      else if (eachFilter.name) { fetchUrl += `&name=${eachFilter.name}`; }
       else if (eachFilter.from && eachFilter.to) {
         console.log("FROMMMMM AND TOOOO", eachFilter.from, eachFilter.to)
-        fetchUrl = `${baseUrl}?from=${eachFilter.from}&to=${eachFilter.to}`;
+        fetchUrl += `&from=${eachFilter.from}&to=${eachFilter.to}`;
       }
       else if (eachFilter.from) {
         console.log("FROMMMMM AND TOOOO", eachFilter.from, eachFilter.to)
-        fetchUrl = `${baseUrl}?from=${eachFilter.from}&to=100`;
+        fetchUrl += `&from=${eachFilter.from}&to=100`;
       }
       else if (eachFilter.to) {
         console.log("FROMMMMM AND TOOOO", eachFilter.from, eachFilter.to)
-        fetchUrl = `${baseUrl}?from=1&to=${eachFilter.to}`;
+        fetchUrl += `&from=1&to=${eachFilter.to}`;
       }
-      fetch(`${fetchUrl}`)
-        .then(res => res.json())
-        .then((data: object | any) => {
-          console.log("----------DATA---------", data);
-        }).catch((err) => {
-          console.log("FETCH ERROR.........", err)
-        })
     })
   }
+  fetch(`${fetchUrl}&howManyFilters=${howManyFilters}`)
+    .then(res => res.json())
+    .then((data: object | any) => {
+      console.log("----------DATA---------", data);
+    }).catch((err) => {
+      console.log("FETCH ERROR.........", err)
+    })
   //`http://localhost:3000/booksList?from=${filters[0].from}&to=${filters[0].to}`
 
   throw new Error("Todo")

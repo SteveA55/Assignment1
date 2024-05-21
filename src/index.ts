@@ -128,21 +128,32 @@ router.register({
         console.log("----FRONTEND DEBUG QUERY-----------", query)
         console.log("----FRONTEND QUERY AUTHOR-----------", query.from, query.to)
 
+        var howManyFilters: string = query.howManyFilters as string;
+        var howManyFiltersCorrect: number = 0;
+
         // Loop through all books and filters, only return the books that match the indicated filters.
         books?.map((book: object | any) => {
 
 
             if (query.from != undefined && query.to != undefined && book.price <= query.to && book.price >= query.from) {
-                filteredBooks.push(book);
+                //filteredBooks.push(book);
                 //book.display = true;
+                howManyFiltersCorrect++;
             }
             if (query.name != undefined && query.name === book.name) {
-                filteredBooks.push(book);
+                //filteredBooks.push(book);
+                howManyFiltersCorrect++;
             }
             if (query.author != undefined && query.author === book.author) {
+                //filteredBooks.push(book);
+                howManyFiltersCorrect++;
+            }
+            console.log("------COMPARISON---------", parseInt(howManyFilters), ":", howManyFiltersCorrect)
+            if (howManyFiltersCorrect >= parseInt(howManyFilters)) {
+                console.log("--------- ALL FILTERS ARE MATCHED ----------");
                 filteredBooks.push(book);
             }
-
+            howManyFiltersCorrect = 0;
         })
 
         ctx.response.status = 200;
