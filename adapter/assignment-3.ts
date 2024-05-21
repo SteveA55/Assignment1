@@ -1,4 +1,5 @@
 import previous_assignment from './assignment-2'
+import * as Yup from "yup";
 
 export type BookID = string
 
@@ -22,6 +23,31 @@ export interface Filter {
 // Within a single filter, a book would need to match all the given conditions
 async function listBooks(filters?: Filter[]): Promise<Book[]> {
 
+  const validationSchema = Yup.array().of(
+    Yup.object().shape({
+      from: Yup.number().optional().positive(),
+      to: Yup.number().optional().positive(),
+      name: Yup.string().optional(),
+      author: Yup.string().optional(),
+    })
+  );
+
+  var result;
+
+  if (filters != undefined) {
+    try {
+      result = await validationSchema.validate(filters);
+      //var debug = await validationSchema.validate([{ author: 5 }])
+    } catch (err: unknown) {
+      console.log("ERROR validation: ", err)
+      throw new Error(`Validation ERROR ${err}`)
+    }
+  }
+
+  if (result) {
+    console.log("Yup (validation) result: ", result);
+    // console.log("Yup DEBUG ", debug);
+  }
 
 
   throw new Error("Todo")
