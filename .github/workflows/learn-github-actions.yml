@@ -3,5 +3,6 @@ run-name: ${{ github.actor }} is running linter.
 on: [push]
 jobs:
   run-linter:
+    runs-on: ubuntu-latest
     steps:
-      - run: npx eslint
+        - run: npx eslint
