@@ -9,4 +9,4 @@ jobs:
         - uses: actions/setup-node@v4
           with:
             node-version: '20'
-        - run: npx eslint
+        - run: tsc --noEmit ./src/index.ts
