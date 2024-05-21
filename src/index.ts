@@ -29,7 +29,29 @@ export interface Book {
     image: string,
 };
 
-// Assignment 1
+const DB = "mongodb://mongo:27017";
+
+mongoose
+    .connect(DB, {})
+    .then(() => console.log("DB connection successful!"))
+    .catch((err: string) => console.log("Mongoose DB connection error: ", err));
+
+console.log("HTTP METHOD\tURL\tAction(requirements)");
+console.log("GET\t\t/books\t\tFetch All Books");
+console.log("POST\t\t/books\t\tCreate new book (id, name, author, description, price, image required)");
+console.log("PATCH\t\t/books\t\tUpdate a book by price (price required)");
+console.log("DELETE\t\t/books\t\tDelete a book (id required)")
+
+const Book = mongoose.model("Book", {
+    id: { type: Number },
+    name: { type: String },
+    author: { type: String },
+    description: { type: String },
+    price: { type: Number },
+    image: { type: String },
+});
+
+// List all books with filters.
 router.register({
     name: 'List of books.',
     method: 'get',
@@ -69,29 +91,7 @@ router.register({
     },
 });
 
-const DB = "mongodb://mongo:27017";
-
-mongoose
-    .connect(DB, {})
-    .then(() => console.log("DB connection successful!"))
-    .catch((err: string) => console.log("Mongoose DB connection error: ", err));
-
-console.log("HTTP METHOD\tURL\tAction(requirements)");
-console.log("GET\t\t/books\t\tFetch All Books");
-console.log("POST\t\t/books\t\tCreate new book (id, name, author, description, price, image required)");
-console.log("PATCH\t\t/books\t\tUpdate a book by price (price required)");
-console.log("DELETE\t\t/books\t\tDelete a book (id required)")
-
-const Book = mongoose.model("Book", {
-    id: { type: Number },
-    name: { type: String },
-    author: { type: String },
-    description: { type: String },
-    price: { type: Number },
-    image: { type: String },
-});
-
-// List all books.
+// List all books without filters.
 router.register({
     name: 'List all books.',
     method: 'get',
@@ -113,6 +113,56 @@ router.register({
     }
 });
 
+// List all books with multiple filters (Assignment 3)
+router.register({
+    name: 'List of books.',
+    method: 'get',
+    path: '/booksFilters',
+    handler: async (ctx, next) => {
+        // const { body, headers, query, params } = ctx.request;
+        const { query } = ctx.request;
+
+        const filteredBooks: Array<object> = [];
+        //if (query === undefined) { return; }
+
+        // Loop through all books and filters, only return the books that match the indicated filters.
+        books?.map((book: object | any) => {
+
+
+            if (query.from != undefined && query.to != undefined && book.price <= query.to && book.price >= query.from) {
+                filteredBooks.push(book);
+                //book.display = true;
+            }
+            if (query.name != undefined && query.name === book.name) {
+                filteredBooks.push(book);
+            }
+            if (query.author != undefined && query.author === book.author) {
+                filteredBooks.push(book);
+            }
+
+        })
+
+        ctx.response.status = 200;
+        ctx.response.body = { filteredBooks }
+
+        /* Un-used code we may want to revisit later.
+                ctx.response.body = { books }
+                ctx.response.body = { ...filteredBooks }
+                console.log("----- Sending back filteredBooks list-----------");
+                 return filteredBooks;
+       */
+
+
+        await next();
+    },
+    validate: {
+        // Validate input. Make sure we are working with type number and not type string as an example.
+        query: z.object({
+            from: z.optional(z.coerce.number()), to: z.optional(z.coerce.number()),
+            name: z.optional(z.string()), author: z.optional(z.string().optional())
+        }),
+    },
+});
 // Create a book.
 router.register({
     name: 'Create new book.',
@@ -223,6 +273,8 @@ router.register({
     },
 
 });
+
+// Assignment 3
 
 
 
