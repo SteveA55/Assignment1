@@ -1,0 +1,7 @@
+name: run-linter
+run-name: ${{ github.actor }} is running linter.
+on: [push]
+jobs:
+  run-linter:
+    steps:
+      - run: npx eslint
