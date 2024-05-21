@@ -125,6 +125,9 @@ router.register({
         const filteredBooks: Array<object> = [];
         //if (query === undefined) { return; }
 
+        console.log("----FRONTEND DEBUG QUERY-----------", query)
+        console.log("----FRONTEND QUERY AUTHOR-----------", query.from, query.to)
+
         // Loop through all books and filters, only return the books that match the indicated filters.
         books?.map((book: object | any) => {
 
