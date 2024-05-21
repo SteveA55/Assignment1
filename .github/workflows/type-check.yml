@@ -5,4 +5,8 @@ jobs:
   run-linter:
     runs-on: ubuntu-latest
     steps:
-      - run: npx eslint
+        - uses: actions/checkout@v4
+        - uses: actions/setup-node@v4
+          with:
+            node-version: '20'
+        - run: npx eslint
