@@ -6,7 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start-server": "tsx ./src/index.ts",
-    "run lint": "npx eslint"
+    "lint": "npx eslint",
+    "fix-lint": "npx eslint --fix",
+    "type-check": "tsc --noEmit ./src/index.ts"
   },
   "keywords": [],
   "author": "",
