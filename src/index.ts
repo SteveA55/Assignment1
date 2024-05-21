@@ -1,8 +1,9 @@
-import axios from "axios";
+//import axios from "axios";
 import Koa from 'koa';
 import zodRouter from 'koa-zod-router';
-import { array, isDirty, z } from 'zod';
-import assignment1 from "../adapter/assignment-1";
+//import { array,isDirty, z } from 'zod';
+import { z } from 'zod';
+//import assignment1 from "../adapter/assignment-1";
 import assignment2 from "../adapter/assignment-2";
 
 const cors = require('@koa/cors');
@@ -17,6 +18,16 @@ app.use(cors())
 const books: Array<object> = JSON.parse(fs.readFileSync(`./mcmasteful-book-list.json`, 'utf8'));
 
 //console.log("Assignment1,,,,,,,,", assignment1)
+export type BookID = string;
+
+export interface Book {
+    id?: BookID,
+    name: string,
+    author: string,
+    description: string,
+    price: number,
+    image: string,
+};
 
 // Assignment 1
 router.register({
@@ -24,7 +35,8 @@ router.register({
     method: 'get',
     path: '/booksList',
     handler: async (ctx, next) => {
-        const { body, headers, query, params } = ctx.request;
+        // const { body, headers, query, params } = ctx.request;
+        const { query } = ctx.request;
 
         const filteredBooks: Array<object> = [];
         //if (query === undefined) { return; }
@@ -85,7 +97,7 @@ router.register({
     method: 'get',
     path: '/books',
     handler: async (ctx, next) => {
-        const { body, headers, query, params } = ctx.request;
+        //const { body, headers, query, params } = ctx.request;
 
         // Fetch all books from MongoDB
         const result = await Book.find({})
@@ -107,7 +119,7 @@ router.register({
     method: 'post',
     path: '/books',
     handler: async (ctx, next) => {
-        const { body, headers, query, params } = ctx.request;
+        const { query } = ctx.request;
 
         // Create the new book in mongoDB with supplied parameters.
         const result = await Book.create({
@@ -149,7 +161,7 @@ router.register({
     method: 'patch',
     path: '/books',
     handler: async (ctx, next) => {
-        const { body, headers, query, params } = ctx.request;
+        const { query } = ctx.request;
 
         const result = await Book.findOneAndUpdate({ id: query.id }, { price: query.price })
 
@@ -182,7 +194,7 @@ router.register({
     method: 'delete',
     path: '/books',
     handler: async (ctx, next) => {
-        const { body, headers, query, params } = ctx.request;
+        const { query } = ctx.request;
 
         // Delete the book by id.
         const result = await Book.deleteOne({

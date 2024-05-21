@@ -1,5 +1,5 @@
 import assignment1 from "./assignment-1";
-import axios from "axios";
+//import axios from "axios";
 import * as Yup from "yup";
 
 export type BookID = string;
@@ -11,12 +11,12 @@ export interface Book {
     description: string,
     price: number,
     image: string,
-};
-
+}
+/*
 interface myBooks {
     filteredBooks: Book,
 }
-
+*/
 
 async function listBooks(filters?: Array<{ from?: number, to?: number }>): Promise<Book[]> {
 
@@ -35,11 +35,14 @@ async function listBooks(filters?: Array<{ from?: number, to?: number }>): Promi
      This prevents fatal TypeError from crashing our application
      when no from or to query is provided.
     */
+    var fetchUrl;
+
     if (filters.length >= 1) {
-        const errors = validationSchema.validate(filters[0]);
-        var fetchUrl = `http://localhost:3000/booksList?from=${filters[0].from}&to=${filters[0].to}`
+        //const errors = validationSchema.validate(filters[0]);
+        validationSchema.validate(filters[0]);
+        fetchUrl = `http://localhost:3000/booksList?from=${filters[0].from}&to=${filters[0].to}`
     } else {
-        var fetchUrl = `http://localhost:3000/booksList?from=${defaultFilterFrom}&to=${defaultFilterTo}`
+        fetchUrl = `http://localhost:3000/booksList?from=${defaultFilterFrom}&to=${defaultFilterTo}`
     }
 
     /* DEBUG - We may want to debug with this again later.
