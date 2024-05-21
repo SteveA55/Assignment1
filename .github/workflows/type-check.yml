@@ -1,0 +1,8 @@
+name: Invoke type checking for TypeScript.
+run-name: ${{ github.actor }} is running type checking.
+on: [push]
+jobs:
+  run-linter:
+    runs-on: ubuntu-latest
+    steps:
+      - run: npx eslint
