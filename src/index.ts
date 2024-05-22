@@ -124,8 +124,8 @@ router.register({
 
         const filteredBooks: Array<object> = [];
 
-        var howManyFilters: string | any = query.howManyFilters as string;
-        var howManyFiltersCorrect: number = 0;
+        let howManyFilters: string | any = query.howManyFilters as string;
+        let howManyFiltersCorrect: number = 0;
 
         console.log("how many keys............", Object.keys(query).length)
 

@@ -37,7 +37,7 @@ async function listBooks(filters?: Array<{ from?: number, to?: number }>): Promi
      This prevents fatal TypeError from crashing our application
      when no from or to query is provided.
     */
-    var fetchUrl;
+    let fetchUrl;
 
     if (filters.length >= 1) {
         //const errors = validationSchema.validate(filters[0]);

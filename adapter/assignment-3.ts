@@ -35,7 +35,7 @@ async function listBooks(filters?: Filter[]): Promise<Book[]> {
     })
   );
 
-  var result;
+  let result;
 
   // Perform validation on our filters. Log errors that may occur.
   if (filters != undefined) {
@@ -54,12 +54,11 @@ async function listBooks(filters?: Filter[]): Promise<Book[]> {
   if (filters != undefined) {
 
     // Create our base url to avoid repeating the same code.
-    var baseUrl: string = "http://localhost:3000/booksFilters?";
+    const baseUrl: string = "http://localhost:3000/booksFilters?";
     var fetchUrl: string | undefined = `${baseUrl}`;
-    var howManyFilters: number | undefined = filters.length;
 
     // Loop through each filter, attach each filter to the URL and send all filters to the backend.
-    filters.map((eachFilter, index) => {
+    filters.map((eachFilter) => {
 
       // If each filter exists, attach it to the URL.
       if (eachFilter.author)
