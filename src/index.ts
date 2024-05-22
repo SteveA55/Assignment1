@@ -128,8 +128,25 @@ router.register({
         console.log("----FRONTEND DEBUG QUERY-----------", query)
         console.log("----FRONTEND QUERY AUTHOR-----------", query.from, query.to)
 
-        var howManyFilters: string = query.howManyFilters as string;
+        // var howManyFilters: string = query.howManyFilters as string;
+        var howManyFilters: any = query.howManyFilters as string;
         var howManyFiltersCorrect: number = 0;
+
+        console.log("how many keys............", Object.keys(query).length)
+
+
+        // If howManyFilters is undefined then it is NOT a frontend call, it is an direct API call.
+        // if (howManyFilters === undefined && query.from || query.to) { console.log(".......setting keys....."); howManyFilters = Object.keys(query).length - 1; }
+        // else if (howManyFilters === undefined) { console.log(".......setting keys....."); howManyFilters = Object.keys(query).length; }
+        if (query.from || query.to) { console.log(".......setting keys....."); howManyFilters = Object.keys(query).length - 1; }
+        else if (howManyFilters === query.name || query.author) { console.log(".......setting keys....."); howManyFilters = Object.keys(query).length; }
+        console.log("----undefined?-----", howManyFilters);
+        //if (howManyFilters === undefined && query.from || query.to || query.name || query.author) { console.log("One condition is true."); howManyFilters = 1; }
+        // if (howManyFilters === undefined && query.name) { console.log("One condition is true."); +howManyFilters++; }
+        //if (howManyFilters === undefined && query.author) { console.log("One condition is true."); +howManyFilters++; }
+        console.log("How many Filters...........", howManyFilters);
+
+
 
         // Loop through all books and filters, only return the books that match the indicated filters.
         books?.map((book: object | any) => {
@@ -156,16 +173,9 @@ router.register({
             howManyFiltersCorrect = 0;
         })
 
+        howManyFilters == 0;
         ctx.response.status = 200;
         ctx.response.body = { filteredBooks }
-
-        /* Un-used code we may want to revisit later.
-                ctx.response.body = { books }
-                ctx.response.body = { ...filteredBooks }
-                console.log("----- Sending back filteredBooks list-----------");
-                 return filteredBooks;
-       */
-
 
         await next();
     },

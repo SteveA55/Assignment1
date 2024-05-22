@@ -81,7 +81,8 @@ async function listBooks(filters?: Filter[]): Promise<Book[]> {
       }
     })
   }
-  fetch(`${fetchUrl}&howManyFilters=${howManyFilters}`)
+  // fetch(`${fetchUrl}&howManyFilters=${howManyFilters}`)
+  fetch(`${fetchUrl}`)
     .then(res => res.json())
     .then((data: object | any) => {
       console.log("----------DATA---------", data);
