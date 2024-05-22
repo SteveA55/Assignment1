@@ -119,74 +119,61 @@ router.register({
     method: 'get',
     path: '/booksFilters',
     handler: async (ctx, next) => {
-        // const { body, headers, query, params } = ctx.request;
+
         const { query } = ctx.request;
 
         const filteredBooks: Array<object> = [];
-        //if (query === undefined) { return; }
 
-        console.log("----FRONTEND DEBUG QUERY-----------", query)
-        console.log("----FRONTEND QUERY AUTHOR-----------", query.from, query.to)
-
-        // var howManyFilters: string = query.howManyFilters as string;
-        var howManyFilters: any = query.howManyFilters as string;
+        var howManyFilters: string | any = query.howManyFilters as string;
         var howManyFiltersCorrect: number = 0;
 
         console.log("how many keys............", Object.keys(query).length)
 
+        // Make sure from and to are not counted as individual filters.
+        if (query.from || query.to)
+            howManyFilters = Object.keys(query).length - 1;
 
-        // If howManyFilters is undefined then it is NOT a frontend call, it is an direct API call.
-        // if (howManyFilters === undefined && query.from || query.to) { console.log(".......setting keys....."); howManyFilters = Object.keys(query).length - 1; }
-        // else if (howManyFilters === undefined) { console.log(".......setting keys....."); howManyFilters = Object.keys(query).length; }
-        if (query.from || query.to) { console.log(".......setting keys....."); howManyFilters = Object.keys(query).length - 1; }
-        else if (howManyFilters === query.name || query.author) { console.log(".......setting keys....."); howManyFilters = Object.keys(query).length; }
-        console.log("----undefined?-----", howManyFilters);
-        //if (howManyFilters === undefined && query.from || query.to || query.name || query.author) { console.log("One condition is true."); howManyFilters = 1; }
-        // if (howManyFilters === undefined && query.name) { console.log("One condition is true."); +howManyFilters++; }
-        //if (howManyFilters === undefined && query.author) { console.log("One condition is true."); +howManyFilters++; }
-        console.log("How many Filters...........", howManyFilters);
+        else if (howManyFilters === query.name || query.author)
+            howManyFilters = Object.keys(query).length;
 
-
-
-        // Loop through all books and filters, only return the books that match the indicated filters.
+        // Loop through all books and filters, only return the books that match ALL filters.
         books?.map((book: object | any) => {
 
+            if (query.from != undefined && query.to != undefined && book.price <= query.to && book.price >= query.from)
+                howManyFiltersCorrect++;
 
-            if (query.from != undefined && query.to != undefined && book.price <= query.to && book.price >= query.from) {
-                //filteredBooks.push(book);
-                //book.display = true;
+            if (query.name != undefined && query.name === book.name)
                 howManyFiltersCorrect++;
-            }
-            if (query.name != undefined && query.name === book.name) {
-                //filteredBooks.push(book);
+
+            if (query.author != undefined && query.author === book.author)
                 howManyFiltersCorrect++;
-            }
-            if (query.author != undefined && query.author === book.author) {
-                //filteredBooks.push(book);
-                howManyFiltersCorrect++;
-            }
-            console.log("------COMPARISON---------", parseInt(howManyFilters), ":", howManyFiltersCorrect)
-            if (howManyFiltersCorrect >= parseInt(howManyFilters)) {
-                console.log("--------- ALL FILTERS ARE MATCHED ----------");
+
+            //console.log("------COMPARISON---------", parseInt(howManyFilters), ":", howManyFiltersCorrect)
+
+            if (howManyFiltersCorrect >= parseInt(howManyFilters))
                 filteredBooks.push(book);
-            }
+
             howManyFiltersCorrect = 0;
         })
 
+        // Reset the counter.
         howManyFilters == 0;
+
+        // Send success response back to client
         ctx.response.status = 200;
         ctx.response.body = { filteredBooks }
 
         await next();
     },
     validate: {
-        // Validate input. Make sure we are working with type number and not type string as an example.
+        // Validate input. Make sure we are working with proper types such as numbers and strings.
         query: z.object({
             from: z.optional(z.coerce.number()), to: z.optional(z.coerce.number()),
             name: z.optional(z.string()), author: z.optional(z.string().optional())
         }),
     },
 });
+
 // Create a book.
 router.register({
     name: 'Create new book.',

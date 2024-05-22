@@ -37,10 +37,10 @@ async function listBooks(filters?: Filter[]): Promise<Book[]> {
 
   var result;
 
+  // Perform validation on our filters. Log errors that may occur.
   if (filters != undefined) {
     try {
       result = await validationSchema.validate(filters);
-      //var debug = await validationSchema.validate([{ author: 5 }])
     } catch (err: unknown) {
       console.log("ERROR validation: ", err)
       throw new Error(`Validation ERROR ${err}`)
@@ -49,39 +49,37 @@ async function listBooks(filters?: Filter[]): Promise<Book[]> {
 
   if (result) {
     console.log("Yup (validation) result: ", result);
-    // console.log("Yup DEBUG ", debug);
   }
 
   if (filters != undefined) {
-    //var fetchUrl: string = "";
-    //fetchUrl = `http://localhost:3000/booksFilters?${filters}`;
-    //console.log("DEBUG starting fetch...........", fetchUrl);
-    console.log("-------HOW MANY FILTERS?------", filters.length)
 
+    // Create our base url to avoid repeating the same code.
     var baseUrl: string = "http://localhost:3000/booksFilters?";
     var fetchUrl: string | undefined = `${baseUrl}`;
     var howManyFilters: number | undefined = filters.length;
-    // Loop through each filter and sent the params matching the filter that is supplied to the backend.
+
+    // Loop through each filter, attach each filter to the URL and send all filters to the backend.
     filters.map((eachFilter, index) => {
 
-      //console.log("------- EACH FILTER--------", eachFilter.author)
-      if (eachFilter.author) { fetchUrl += `&author=${eachFilter.author}`; }
-      else if (eachFilter.name) { fetchUrl += `&name=${eachFilter.name}`; }
-      else if (eachFilter.from && eachFilter.to) {
-        console.log("FROMMMMM AND TOOOO", eachFilter.from, eachFilter.to)
+      // If each filter exists, attach it to the URL.
+      if (eachFilter.author)
+        fetchUrl += `&author=${eachFilter.author}`;
+
+      else if (eachFilter.name)
+        fetchUrl += `&name=${eachFilter.name}`;
+
+      else if (eachFilter.from && eachFilter.to)
         fetchUrl += `&from=${eachFilter.from}&to=${eachFilter.to}`;
-      }
-      else if (eachFilter.from) {
-        console.log("FROMMMMM AND TOOOO", eachFilter.from, eachFilter.to)
+
+      else if (eachFilter.from)
         fetchUrl += `&from=${eachFilter.from}&to=100`;
-      }
-      else if (eachFilter.to) {
-        console.log("FROMMMMM AND TOOOO", eachFilter.from, eachFilter.to)
+
+      else if (eachFilter.to)
         fetchUrl += `&from=1&to=${eachFilter.to}`;
-      }
+
     })
   }
-  // fetch(`${fetchUrl}&howManyFilters=${howManyFilters}`)
+  // Send our filters to the backend and retrieve the resulting books.
   fetch(`${fetchUrl}`)
     .then(res => res.json())
     .then((data: object | any) => {
@@ -89,7 +87,6 @@ async function listBooks(filters?: Filter[]): Promise<Book[]> {
     }).catch((err) => {
       console.log("FETCH ERROR.........", err)
     })
-  //`http://localhost:3000/booksList?from=${filters[0].from}&to=${filters[0].to}`
 
   throw new Error("Todo")
 }
