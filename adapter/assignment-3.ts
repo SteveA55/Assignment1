@@ -23,6 +23,7 @@ export interface Filter {
 // Within a single filter, a book would need to match all the given conditions
 async function listBooks(filters?: Filter[]): Promise<Book[]> {
 
+  // This code makes an assumption:
   // If a from number is provided but not a to number. to is default to 100.
   // If a to number is provided but not a from number. from is default to 1.
 
@@ -81,7 +82,6 @@ async function listBooks(filters?: Filter[]): Promise<Book[]> {
   }
 
   // Send our filters to the backend and retrieve the resulting books.
-  // var books: Book = [];
   var fetchResult: any = fetch(`${fetchUrl}`)
     .then(res => res.json())
     .then((data: object | any) => {

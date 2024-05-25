@@ -55,31 +55,22 @@ router.register({
     method: 'get',
     path: '/booksList',
     handler: async (ctx, next) => {
-        // const { body, headers, query, params } = ctx.request;
+
         const { query } = ctx.request;
 
         const filteredBooks: Array<object> = [];
-        //if (query === undefined) { return; }
 
         // Loop through all books and filters, only return the books that match the indicated filters.
         books?.map((book: object | any) => {
 
             if (book.price <= query.to && book.price >= query.from) {
                 filteredBooks.push(book);
-                //book.display = true;
             }
         })
 
+        // Send back success result with only books that matched filters to the client.
         ctx.response.status = 200;
         ctx.response.body = { filteredBooks }
-
-        /* Un-used code we may want to revisit later.
-                ctx.response.body = { books }
-                ctx.response.body = { ...filteredBooks }
-                console.log("----- Sending back filteredBooks list-----------");
-                 return filteredBooks;
-       */
-
 
         await next();
     },
@@ -95,7 +86,6 @@ router.register({
     method: 'get',
     path: '/books',
     handler: async (ctx, next) => {
-        //const { body, headers, query, params } = ctx.request;
 
         // Fetch all books from MongoDB
         const result = await Book.find({})
@@ -143,8 +133,6 @@ router.register({
 
             if (query.author != undefined && query.author === book.author)
                 howManyFiltersCorrect++;
-
-            //console.log("------COMPARISON---------", parseInt(howManyFilters), ":", howManyFiltersCorrect)
 
             if (howManyFiltersCorrect >= parseInt(howManyFilters))
                 filteredBooks.push(book);
@@ -281,9 +269,6 @@ router.register({
 
 });
 
-// Assignment 3
-
-
 
 app.use(router.routes());
 
@@ -296,48 +281,63 @@ app.use(cors)
 
 
 /* Un-needed code - we may want to re-introduce later. - Assignment 1 - fetch all books
-        // Query is always of type string. We don't have control over that, so I wrote the following code which works. But it is not susitable for this use-case scenario because query would always be of type string, not set by us. But by the framework koa-zod-router I believe.
-        
-        if (typeof (query.from) != 'number' || typeof (query.to) == 'number') {
-            var error: string = "Invalid input. From or To filter is not of type number. Needs to be of type number.";
-            ctx.body = { error }
-            throw new TypeError(error);
-        }
+
+
+            console.log("------COMPARISON---------", parseInt(howManyFilters), ":", howManyFiltersCorrect)
+
+        if (query === undefined) { return; }
+
+       Un-used code we may want to revisit later.
+                ctx.response.body = { books }
+                ctx.response.body = { ...filteredBooks }
+                console.log("----- Sending back filteredBooks list-----------");
+                 return filteredBooks;
+     
+
+
+// Query is always of type string. We don't have control over that, so I wrote the following code which works. But it is not susitable for this use-case scenario because query would always be of type string, not set by us. But by the framework koa-zod-router I believe.
+
+if (typeof (query.from) != 'number' || typeof (query.to) == 'number') {
+    var error: string = "Invalid input. From or To filter is not of type number. Needs to be of type number.";
+    ctx.body = { error }
+    throw new TypeError(error);
+}
 
          We ended up not needing this as we figuered out how to use validate in zod.
          Convert type string to type number.
-        var from: number = +`${query.from}`;
-        var to: number = +`${query.to}`;
+var from: number = +`${query.from}`;
+var to: number = +`${query.to}`;
 
-         DEBUG
-            console.log("PARAMS::::", params)
-            console.log("BODY:::", body);
-            console.log("HEADERS::::", headers)
+DEBUG
+console.log("PARAMS::::", params)
+console.log("BODY:::", body);
+console.log("HEADERS::::", headers)
 
          Didn't need this as we now use validate in vod instead of our own validation.
-        var filteredBooks: Promise<object> = listBooks([{ "from": from, "to": to }]);
-        var filteredBooks: Promise<object> = assignment1.listBooks(books, [{ "from": query.from, "to": query.to }]);
-        var filteredBooks: Promise<object> = assignment2.listBooks([{ "from": query.from, "to": query.to }]);
+var filteredBooks: Promise<object> = listBooks([{ "from": from, "to": to }]);
+var filteredBooks: Promise<object> = assignment1.listBooks(books, [{ "from": query.from, "to": query.to }]);
+var filteredBooks: Promise<object> = assignment2.listBooks([{ "from": query.from, "to": query.to }]);
 
-        --- Inside books.map ---
+--- Inside books.map-- -
               if (typeof (query) === "object") {
-              if (query != undefined) { ; 
-             query?.map((filter: object | any) => {
+    if (query != undefined) {
+        ;
+        query?.map((filter: object | any) => {
             DEBUG
-                console.log("FROM::::::::", filter.from, "TO:::::::", filter.to);
-                console.log("CURRENT BOOOK...........", book);
+            console.log("FROM::::::::", filter.from, "TO:::::::", filter.to);
+            console.log("CURRENT BOOOK...........", book);
             Check the current book if it matches the current filter, if so, push that book onto array.
 
-                        
-            for (const key in filteredBooks) {
-             
-                console.log("value", filteredBooks[key]);
-            }
-        ---- After books.map -----
-        console.log("DISPLAY............", books?.display)
-        
+
+                for(const key in filteredBooks) {
+
+            console.log("value", filteredBooks[key]);
+        }
+        ----After books.map-----
+            console.log("DISPLAY............", books?.display)
+
         filteredBooks.map((book) => {
             console.log("BOOOOOOOOOOOOOOOOK", book)
         })
-        
-*/
+
+            */
