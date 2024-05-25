@@ -1,7 +1,5 @@
-//import axios from "axios";
 import Koa from 'koa';
 import zodRouter from 'koa-zod-router';
-//import { array,isDirty, z } from 'zod';
 import { z } from 'zod';
 //import assignment1 from "../adapter/assignment-1";
 import assignment2 from "../adapter/assignment-2";
@@ -126,8 +124,6 @@ router.register({
 
         let howManyFilters: string | any = query.howManyFilters as string;
         let howManyFiltersCorrect: number = 0;
-
-        console.log("how many keys............", Object.keys(query).length)
 
         // Make sure from and to are not counted as individual filters.
         if (query.from || query.to)

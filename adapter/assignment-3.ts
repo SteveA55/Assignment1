@@ -76,18 +76,22 @@ async function listBooks(filters?: Filter[]): Promise<Book[]> {
       else if (eachFilter.to)
         fetchUrl += `&from=1&to=${eachFilter.to}`;
 
+
     })
   }
+
   // Send our filters to the backend and retrieve the resulting books.
-  fetch(`${fetchUrl}`)
+  // var books: Book = [];
+  var fetchResult: any = fetch(`${fetchUrl}`)
     .then(res => res.json())
     .then((data: object | any) => {
       console.log("----------DATA---------", data);
+      //books.push(data);
     }).catch((err) => {
       console.log("FETCH ERROR.........", err)
     })
 
-  throw new Error("Todo")
+  return (fetchResult);
 }
 
 async function createOrUpdateBook(book: Book): Promise<BookID> {
