@@ -145,7 +145,7 @@ router.register({
 
         // Send success response back to client
         ctx.response.status = 200;
-        ctx.response.body = { filteredBooks }
+        ctx.response.body = { ...filteredBooks }
 
         await next();
     },
