@@ -85,7 +85,7 @@ async function listBooks(filters?: Filter[]): Promise<Book[]> {
   var fetchResult: any = fetch(`${fetchUrl}`)
     .then(res => res.json())
     .then((data: object | any) => {
-      console.log("----------DATA---------", data);
+      console.log("Response data::::::::::::", data);
       //books.push(data);
     }).catch((err) => {
       console.log("FETCH ERROR.........", err)
