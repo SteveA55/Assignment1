@@ -3,6 +3,7 @@ import zodRouter from 'koa-zod-router';
 import { z } from 'zod';
 //import assignment1 from "../adapter/assignment-1";
 import assignment2 from "../adapter/assignment-2";
+import { Query } from 'mongoose';
 
 const cors = require('@koa/cors');
 const fs = require("fs");
@@ -48,6 +49,13 @@ const Book = mongoose.model("Book", {
     price: { type: Number },
     image: { type: String },
 });
+
+const Shelf = mongoose.model("Shelf", {
+    bookId: { type: String },
+    numberOfBooks: { type: Number },
+    shelf: { type: String }
+
+})
 
 // List all books with filters.
 router.register({
@@ -145,7 +153,11 @@ router.register({
 
         // Send success response back to client
         ctx.response.status = 200;
+
+
         ctx.response.body = { ...filteredBooks }
+        //ctx.response.body = { filteredBooks }
+        // ctx.response.body = { books }
 
         await next();
     },
@@ -268,6 +280,84 @@ router.register({
     },
 
 });
+
+
+// Assignment 4. Find book by ID (lookupBookById)
+router.register({
+    name: 'List all books.',
+    method: 'get',
+    path: '/booksAssignment4',
+    handler: async (ctx, next) => {
+        const { query } = ctx.request;
+
+        // Fetch all books from MongoDB
+        const result = await Book.find({ id: query.id })
+
+        // Display all books if fetch was successful.
+        if (result) {
+            console.log(`Fetching book by ${query.id} successful.`);
+            ctx.response.body = { result }
+        }
+        else
+            console.log(`Failed to fetch book by id ${query.id}.`);
+        await next();
+    },
+    validate: {
+        // Validate input. Make sure we are working with type number and not type string as an example.
+        query: z.object({
+            id: z.coerce.number()
+        }),
+    },
+});
+
+
+
+// Assignment 4. (placeBooksOnShelf)
+router.register({
+    name: 'List all books.',
+    method: 'post',
+    path: '/booksAssignment4',
+    handler: async (ctx, next) => {
+        const { query } = ctx.request;
+
+        // Fetch all books from MongoDB
+        //const result = await Book.find({ id: query.id })
+
+        const result = await Shelf.create({
+            bookId: query.bookId,
+            numberOfBooks: query.numberOfBooks,
+            shelf: query.shelf
+        })
+
+        // List all shelves. Delete this later.
+        const shelves = await Shelf.find({})
+
+        console.log("--- SHELVES ---", shelves)
+
+        // Display all books if fetch was successful.
+        if (result) {
+            const resp = `Shelf was created successfully id: ${query.bookId}`;
+            console.log(resp);
+            ctx.response.body = { resp }
+        }
+        else {
+            const resp = `Failed to create new shelf id: ${query.bookId}.`
+            console.log(resp);
+            ctx.response.body = { resp }
+        }
+        await next();
+    },
+
+    validate: {
+
+        query: z.object({
+            bookId: z.string(), numberOfBooks: z.coerce.number(),
+            shelf: z.string()
+        }),
+    },
+
+});
+
 
 
 app.use(router.routes());
