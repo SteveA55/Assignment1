@@ -52,6 +52,7 @@ async function orderBooks(order: BookID[]): Promise<{ orderId: OrderId }> {
 }
 
 async function findBookOnShelf(book: BookID): Promise<Array<{ shelf: ShelfId, count: number }>> {
+  // Backend is built.
   throw new Error("Todo")
 }
 

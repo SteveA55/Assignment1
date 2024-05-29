@@ -461,6 +461,43 @@ router.register({
 });
 
 
+// Assignment 4. (findBookOnShelf)
+router.register({
+    name: 'Find book on shelf here.',
+    method: 'get',
+    path: '/booksAssignment4/warehouse',
+    handler: async (ctx, next) => {
+        const { query } = ctx.request;
+
+        const result = await Shelf.find({
+            bookId: query.bookId,
+        })
+
+        // Display all books if fetch was successful.
+        if (result) {
+            const resp = `Book ${query.bookId} was found.`;
+            console.log(resp);
+            console.log(result)
+            ctx.response.body = { resp, result }
+        }
+        else {
+            const resp = `Failed to find the book: ${query.bookId}.`
+            console.log(resp);
+            ctx.response.body = { resp }
+        }
+        await next();
+    },
+
+    validate: {
+        query: z.object({
+            bookId: z.string(),
+        }),
+    },
+
+
+});
+
+
 
 app.use(router.routes());
 
