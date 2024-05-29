@@ -57,6 +57,13 @@ const Shelf = mongoose.model("Shelf", {
 
 })
 
+const Orders = mongoose.model("Orders", {
+    OrderId: { type: String },
+    BookID: { type: Array },
+    // shelf: { type: String }
+
+})
+
 // List all books with filters.
 router.register({
     name: 'List of books.',
@@ -316,7 +323,7 @@ router.register({
 router.register({
     name: 'List all books.',
     method: 'post',
-    path: '/booksAssignment4',
+    path: '/booksAssignment4/warehouse',
     handler: async (ctx, next) => {
         const { query } = ctx.request;
 
@@ -355,6 +362,101 @@ router.register({
             shelf: z.string()
         }),
     },
+
+});
+
+
+
+// Assignment 4. (orderBooks)
+router.register({
+    name: 'Orders books here.',
+    method: 'post',
+    path: '/booksAssignment4/orders',
+    handler: async (ctx, next) => {
+        const { query } = ctx.request;
+
+        // Fetch all books from MongoDB
+        //const result = await Book.find({ id: query.id })
+
+        const result = await Orders.create({
+            BookID: query.BookID,
+            OrderId: query.OrderId
+        })
+
+        // List all shelves. Delete this later.
+        const orders = await Orders.find({})
+
+        /*
+        console.log("--- ORDERS ---", orders)
+        console.log("-------- DEBUG BOOK ID -----------", query.BookID)
+        console.log("-------- DEBUG BOOK ID LENGTH -----------", query.BookID?.length)
+        console.log("-------- DEBUG QUERY -----------", query)
+*/
+        // NOTE TO SELF
+        // Keep using "params" in POSTMAN, not raw-data or json in body.
+
+        // Display all books if fetch was successful.
+        if (result) {
+            const resp = `Order was created successfully id: ${query.OrderId}`;
+            console.log(resp);
+            ctx.response.body = { resp }
+        }
+        else {
+            const resp = `Failed to create new order id: ${query.OrderId}.`
+            console.log(resp);
+            ctx.response.body = { resp }
+        }
+        await next();
+    },
+
+    validate: {
+
+        query: z.object({
+            OrderId: z.string(),
+            BookID: z.array(z.coerce.number()),
+        }),
+    },
+
+
+});
+
+
+// Assignment 4. (listOrders)
+router.register({
+    name: 'List orders here.',
+    method: 'get',
+    path: '/booksAssignment4/orders',
+    handler: async (ctx, next) => {
+        const { query } = ctx.request;
+
+        // List all orders.
+        const orders = await Orders.find({})
+
+        console.log("--- ORDERS ---", orders)
+
+
+        // Display all books if fetch was successful.
+        if (orders) {
+            const resp = `Orders successfully fetched.\n\n ${orders}`;
+            console.log(resp);
+            ctx.response.body = { resp }
+        }
+        else {
+            const resp = `Failed to fetch orders.`
+            console.log(resp);
+            ctx.response.body = { resp }
+        }
+        await next();
+    },
+    /*
+        validate: {
+    
+            query: z.object({
+                OrderId: z.string(),
+                BookID: z.array(z.coerce.number()),
+            }),
+        },
+        */
 
 });
 

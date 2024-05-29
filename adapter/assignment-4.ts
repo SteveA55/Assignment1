@@ -47,6 +47,7 @@ async function placeBooksOnShelf(bookId: BookID, numberOfBooks: number, shelf: S
 }
 
 async function orderBooks(order: BookID[]): Promise<{ orderId: OrderId }> {
+  // Backend is built.
   throw new Error("Todo")
 }
 
@@ -59,6 +60,7 @@ async function fulfilOrder(order: OrderId, booksFulfilled: Array<{ book: BookID,
 }
 
 async function listOrders(): Promise<Array<{ orderId: OrderId, books: Record<BookID, number> }>> {
+  // Backend is built.
   throw new Error("Todo")
 }
 
