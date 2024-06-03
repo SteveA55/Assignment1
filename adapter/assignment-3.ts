@@ -149,17 +149,28 @@ async function listBooks(filters?: Filter[]): Promise<Book[]> {
   }
 
 
-  // Send our filters to the backend and retrieve the resulting books.
-  var fetchResult: any = fetch(`${fetchUrl}`)
-    .then(res => res.json())
-    .then((data: object | any) => {
-      console.log("Response data::::::::::::", data);
-      //books.push(data);
-    }).catch((err) => {
-      console.log("FETCH ERROR.........", err)
-    })
 
-  return (fetchResult);
+  // We submitted this in Assignment 3. But the following version below this one
+  // is a little cleaner.
+  /* var fetchResult: any = fetch(`${fetchUrl}`)
+     .then(res => res.json())
+     .then((data: object | any) => {
+       console.log("Response data::::::::::::", data);
+       //books.push(data);
+     }).catch((err) => {
+       console.log("FETCH ERROR.........", err)
+     })
+ */
+
+
+  // Cleaner code than previously (above).
+  // proper type Book[] is used rather than type "any"
+
+  // Send our filters to the backend and retrieve the resulting books.
+  const response = await fetch(`${fetchUrl}`);
+  const data: Promise<Book[]> = await response.json() as Promise<Book[]>;
+  console.log("---------books--------", data)
+  return (data);
 }
 
 async function createOrUpdateBook(book: Book): Promise<BookID> {

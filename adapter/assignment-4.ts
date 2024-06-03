@@ -57,6 +57,7 @@ async function findBookOnShelf(book: BookID): Promise<Array<{ shelf: ShelfId, co
 }
 
 async function fulfilOrder(order: OrderId, booksFulfilled: Array<{ book: BookID, shelf: ShelfId, numberOfBooks: number }>): Promise<void> {
+  // HALFWAY built.
   throw new Error("Todo")
 }
 
