@@ -31,6 +31,11 @@ export interface OrderIdKeyValue {
   orderId: string
 }
 
+export interface shelve {
+  shelf: ShelfId,
+  count: number,
+}
+
 // If multiple filters are provided, any book that matches at least one of them should be returned
 // Within a single filter, a book would need to match all the given conditions
 async function listBooks(filters?: Filter[]): Promise<Book[]> {
@@ -104,12 +109,12 @@ async function findBookOnShelf(book: BookID): Promise<Array<{ shelf: ShelfId, co
   var fetchUrl: string | undefined = `${baseUrl}/warehouse?bookId=${book}`;
 
   const response = await fetch(`${fetchUrl}`);
-  const data: Promise<Book> = await response.json() as Promise<Book>;
+  const data: Promise<shelve[]> = await response.json() as Promise<shelve[]>;
 
   console.log("findBookOnShelf....findBookOnShelf...findBookOnShelf", data)
 
-  //return (data as Promise<Book>);
-  throw new Error("Todo")
+  return (data as Promise<shelve[]>);
+  //throw new Error("Todo")
 }
 
 async function fulfilOrder(order: OrderId, booksFulfilled: Array<{ book: BookID, shelf: ShelfId, numberOfBooks: number }>): Promise<void> {
