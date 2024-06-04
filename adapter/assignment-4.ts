@@ -73,12 +73,19 @@ async function placeBooksOnShelf(bookId: BookID, numberOfBooks: number, shelf: S
 
 async function orderBooks(order: BookID[]): Promise<{ orderId: OrderId }> {
   // Backend is built.
+  // Frontend is built, however we are un-able to test it.
 
   var fetchUrl: string | undefined = `${baseUrl}/createOrder?`;
   //var fetchUrl: string | undefined = `${baseUrl}?BookID=${book}`;
 
   // Going to have .map through array
   // Since having trouble on backend with query as array prefer to do it on frontend.
+  order?.map((oneBookID, index) => {
+    fetchUrl += `BookID[${index}]=${oneBookID}`
+
+    // Add & only if we are NOT on the first iteration, possible bug fix before bug even exists.
+    if (index >= 1) fetchUrl += "&"
+  })
 
   const response = await fetch(`${fetchUrl}`);
   //const data: Promise<Book[]> = await response.json() as Promise<Book[]>;
@@ -92,6 +99,16 @@ async function orderBooks(order: BookID[]): Promise<{ orderId: OrderId }> {
 
 async function findBookOnShelf(book: BookID): Promise<Array<{ shelf: ShelfId, count: number }>> {
   // Backend is built.
+  // Unable to test front-end or see console.log.
+
+  var fetchUrl: string | undefined = `${baseUrl}/warehouse?bookId=${book}`;
+
+  const response = await fetch(`${fetchUrl}`);
+  const data: Promise<Book> = await response.json() as Promise<Book>;
+
+  console.log("findBookOnShelf....findBookOnShelf...findBookOnShelf", data)
+
+  //return (data as Promise<Book>);
   throw new Error("Todo")
 }
 
