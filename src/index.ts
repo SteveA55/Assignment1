@@ -298,21 +298,22 @@ router.register({
         const { query } = ctx.request;
 
         // Fetch all books from MongoDB
-        const result = await Book.find({ id: query.id });
+        const result = await Book.find({ id: query.BookID });
+        //const result = await Book.find({});
 
         // Display all books if fetch was successful.
         if (result) {
-            console.log(`Fetching book with ${query.id} successful.`);
+            console.log(`Fetching book with bookid: ${query.BookID} successful.`);
             ctx.response.body = { result }
         }
         else
-            console.log(`Failed to fetch book by id ${query.id}.`);
+            console.log(`Failed to fetch book by book id: ${query.BookID}.`);
         await next();
     },
     validate: {
         // Validate input. Make sure we are working with type number and not type string as an example.
         query: z.object({
-            id: z.coerce.number()
+            BookID: z.coerce.number()
         }),
     },
 });

@@ -27,6 +27,10 @@ export interface listOrders {
   books: Record<BookID, number>
 }
 
+export interface OrderIdKeyValue {
+  orderId: string
+}
+
 // If multiple filters are provided, any book that matches at least one of them should be returned
 // Within a single filter, a book would need to match all the given conditions
 async function listBooks(filters?: Filter[]): Promise<Book[]> {
@@ -45,14 +49,14 @@ var baseUrl: string = "http://localhost:3000/booksAssignment4";
 
 async function lookupBookById(book: BookID): Promise<Book> {
   // Backend is built.
+  // Frontend can't see anything in console.log
 
-
-  var fetchUrl: string | undefined = `${baseUrl}?`;
+  var fetchUrl: string | undefined = `${baseUrl}?BookID=${book}`;
 
   const response = await fetch(`${fetchUrl}`);
   const data: Promise<Book> = await response.json() as Promise<Book>;
 
-  console.log("---------books--------", data)
+  console.log("lookupBookById....lookupBookById...lookupBookById", data)
 
   return (data as Promise<Book>);
 
@@ -69,6 +73,20 @@ async function placeBooksOnShelf(bookId: BookID, numberOfBooks: number, shelf: S
 
 async function orderBooks(order: BookID[]): Promise<{ orderId: OrderId }> {
   // Backend is built.
+
+  var fetchUrl: string | undefined = `${baseUrl}/createOrder?`;
+  //var fetchUrl: string | undefined = `${baseUrl}?BookID=${book}`;
+
+  // Going to have .map through array
+  // Since having trouble on backend with query as array prefer to do it on frontend.
+
+  const response = await fetch(`${fetchUrl}`);
+  //const data: Promise<Book[]> = await response.json() as Promise<Book[]>;
+  const data: Promise<OrderIdKeyValue> = await response.json() as Promise<OrderIdKeyValue>;
+
+  console.log("orderBooks....orderBooks.....orderBooks", data)
+
+  return (data);
   throw new Error("Todo")
 }
 
@@ -86,6 +104,7 @@ async function fulfilOrder(order: OrderId, booksFulfilled: Array<{ book: BookID,
 
 async function listOrders(): Promise<Array<{ orderId: OrderId, books: Record<BookID, number> }>> {
   // Backend is built.
+  // Frontend is working in console.log only.
 
   var fetchUrl: string | undefined = `${baseUrl}/orders?`;
 
