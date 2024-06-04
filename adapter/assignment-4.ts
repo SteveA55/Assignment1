@@ -1,3 +1,4 @@
+import { string } from 'zod'
 import previous_assignment from './assignment-3'
 
 export type BookID = string
@@ -19,6 +20,13 @@ export interface Filter {
   author?: string
 };
 
+
+
+export interface listOrders {
+  orderId: string,
+  books: Record<BookID, number>
+}
+
 // If multiple filters are provided, any book that matches at least one of them should be returned
 // Within a single filter, a book would need to match all the given conditions
 async function listBooks(filters?: Filter[]): Promise<Book[]> {
@@ -33,9 +41,22 @@ async function removeBook(book: BookID): Promise<void> {
   await previous_assignment.removeBook(book)
 }
 
+var baseUrl: string = "http://localhost:3000/booksAssignment4";
+
 async function lookupBookById(book: BookID): Promise<Book> {
   // Backend is built.
-  throw new Error("Todo")
+
+
+  var fetchUrl: string | undefined = `${baseUrl}?`;
+
+  const response = await fetch(`${fetchUrl}`);
+  const data: Promise<Book> = await response.json() as Promise<Book>;
+
+  console.log("---------books--------", data)
+
+  return (data as Promise<Book>);
+
+  //throw new Error("Todo")
 }
 
 export type ShelfId = string
@@ -61,9 +82,21 @@ async function fulfilOrder(order: OrderId, booksFulfilled: Array<{ book: BookID,
   throw new Error("Todo")
 }
 
+
+
 async function listOrders(): Promise<Array<{ orderId: OrderId, books: Record<BookID, number> }>> {
   // Backend is built.
-  throw new Error("Todo")
+
+  var fetchUrl: string | undefined = `${baseUrl}/orders?`;
+
+  const response = await fetch(`${fetchUrl}`);
+  //const data: Promise<Book[]> = await response.json() as Promise<Book[]>;
+  const data: Promise<listOrders[]> = await response.json() as Promise<listOrders[]>;
+
+  console.log("listOrders....listOrders.....listOrders", data)
+
+  return (data);
+  //throw new Error("Todo")
 }
 
 const assignment = 'assignment-4'

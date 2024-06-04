@@ -298,11 +298,11 @@ router.register({
         const { query } = ctx.request;
 
         // Fetch all books from MongoDB
-        const result = await Book.find({ id: query.id })
+        const result = await Book.find({ id: query.id });
 
         // Display all books if fetch was successful.
         if (result) {
-            console.log(`Fetching book by ${query.id} successful.`);
+            console.log(`Fetching book with ${query.id} successful.`);
             ctx.response.body = { result }
         }
         else
@@ -439,12 +439,12 @@ router.register({
         if (orders) {
             const resp = `Orders successfully fetched.\n\n ${orders}`;
             console.log(resp);
-            ctx.response.body = { resp }
+            ctx.response.body = { ...orders }
         }
         else {
             const resp = `Failed to fetch orders.`
             console.log(resp);
-            ctx.response.body = { resp }
+            ctx.response.body = { ...orders }
         }
         await next();
     },
