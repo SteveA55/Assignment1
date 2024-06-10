@@ -31,10 +31,22 @@ export const listBooks = createRouteSpec({
         const filteredBooks: Array<object> = [];
         // Loop through all books and filters, only return the books that match the indicated filters.
         books?.map((book: object | any) => {
-            // if (query.from && query.to != undefined)
-            if (book.price <= query.to && book.price >= query.from) {
-                filteredBooks.push(book);
+            if (query.from && query.to) {
+                if (book.price <= query.to && book.price >= query.from) {
+                    filteredBooks.push(book);
+                }
             }
+            else if (query.from && query.to == undefined) {
+                if (book.price <= query.from) {
+                    filteredBooks.push(book);
+                }
+            }
+            else if (query.to && query.from == undefined) {
+                if (book.price >= query.to) {
+                    filteredBooks.push(book);
+                }
+            }
+
         })
         // Send back success result with only books that matched filters to the client.
         ctx.response.status = 200;
@@ -44,8 +56,8 @@ export const listBooks = createRouteSpec({
     },
     validate: {
         // Validate input. Make sure we are working with type number and not type string as an example.
-        //query: z.object({ from: z.optional(z.coerce.number()), to: z.optional(z.coerce.number()) }),
-        query: z.object({ from: z.coerce.number(), to: z.coerce.number() }),
+        query: z.object({ from: z.optional(z.coerce.number()), to: z.optional(z.coerce.number()) }),
+        //query: z.object({ from: z.coerce.number(), to: z.coerce.number() }),
     },
 });
 

@@ -24,7 +24,7 @@ async function listBooks(filters?: Array<{ from?: number, to?: number }>): Promi
 
     // console.log("Filters [1]....", filters[1]) // undefined
     const validationSchema = Yup.object({
-        from: Yup.number().required().positive(),
+        from: Yup.number().optional().positive(),
         to: Yup.number().optional().positive()
     });
     if (filters === undefined) { return []; }
@@ -37,15 +37,21 @@ async function listBooks(filters?: Array<{ from?: number, to?: number }>): Promi
      This prevents fatal TypeError from crashing our application
      when no from or to query is provided.
     */
-    let fetchUrl;
+    var fetchUrl;
 
-    if (filters.length >= 1) {
-        //const errors = validationSchema.validate(filters[0]);
-        validationSchema.validate(filters[0]);
-        fetchUrl = `http://localhost:3000/booksList?from=${filters[0].from}&to=${filters[0].to}`
-    } else {
-        fetchUrl = `http://localhost:3000/booksList?from=${defaultFilterFrom}&to=${defaultFilterTo}`
-    }
+
+    //const errors = validationSchema.validate(filters[0]);
+    //validationSchema.validate(filters[0]);
+
+    if (filters[0]?.from != undefined && filters[0]?.to != undefined)
+        fetchUrl = `http://localhost:3000/booksList?from=${filters[0].from}&to=${filters[0].to}`;
+
+    else if (filters[0]?.from != undefined && filters[0].to === undefined)
+        fetchUrl = `http://localhost:3000/booksList?to=${filters[0].from}`;
+
+    else if (filters[0]?.to != undefined && filters[0].from === undefined)
+        fetchUrl = `http://localhost:3000/booksList?from=${filters[0].to}`;
+
 
     /* DEBUG - We may want to debug with this again later.
         console.log(`Filters BOTH.... from: ${filters[0].from} TO: ${filters[0].to}`);
