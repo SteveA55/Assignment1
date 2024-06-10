@@ -180,16 +180,6 @@ export const listOrders = createRouteSpec({
         }
         await next();
     },
-    /*
-        validate: {
-    
-            query: z.object({
-                OrderId: z.string(),
-                BookID: z.array(z.coerce.number()),
-            }),
-        },
-        */
-
 });
 
 
