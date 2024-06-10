@@ -4,12 +4,6 @@ import * as Yup from "yup";
 export type BookID = string
 
 
-
-
-
-
-
-
 export interface Book {
   id?: BookID
   name: string

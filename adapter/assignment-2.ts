@@ -185,14 +185,3 @@ export default {
     listBooks
 };
 
-
-// Code not used - but may re-introduce later.
-/*
-axios(`http://localhost:3000/books?${book}`, {
-    method: "POST"
-}).then((response) => {
-    console.log("RESPONSE:::::", response.data);
-}).catch((err) => {
-    console.log("ERR:::::", err);
-})
-*/
