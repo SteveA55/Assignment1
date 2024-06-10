@@ -1,9 +1,15 @@
 import Koa from 'koa';
 import zodRouter from 'koa-zod-router';
+import applyRoutes from 'koa-zod-router';
 import { z } from 'zod';
 //import assignment1 from "../adapter/assignment-1";
 import assignment2 from "../adapter/assignment-2";
 import { Query } from 'mongoose';
+
+import { listBooks } from './routes/Assignment1and2';
+import { listBooksMultipleFilters, createBook, updateBook, deleteBook, } from './routes/Assignment3';
+import { lookupBookById, placeBooksOnShelf, orderBooks, listOrders, findBookOnShelf, fulfillOrder } from './routes/Assignment4';
+
 
 const cors = require('@koa/cors');
 const fs = require("fs");
@@ -11,6 +17,27 @@ const app = new Koa();
 const router = zodRouter();
 
 const mongoose = require("mongoose");
+import { Book } from "./models/books";
+import { Orders } from "./models/orders";
+import { Shelf } from "./models/shelf";
+
+/* Assignment 1 & 2 */
+router.register(listBooks);
+
+/* Assignment 3 */
+router.register(listBooksMultipleFilters);
+router.register(createBook);
+router.register(updateBook);
+router.register(deleteBook);
+
+/* Assignment 4 */
+router.register(lookupBookById);
+router.register(placeBooksOnShelf);
+router.register(orderBooks);
+router.register(listOrders);
+router.register(findBookOnShelf);
+router.register(fulfillOrder);
+
 
 app.use(cors())
 
@@ -19,14 +46,7 @@ const books: Array<object> = JSON.parse(fs.readFileSync(`./mcmasteful-book-list.
 //console.log("Assignment1,,,,,,,,", assignment1)
 export type BookID = string;
 
-export interface Book {
-    id?: BookID,
-    name: string,
-    author: string,
-    description: string,
-    price: number,
-    image: string,
-};
+
 
 const DB = "mongodb://mongo:27017";
 
@@ -41,6 +61,7 @@ console.log("POST\t\t/books\t\tCreate new book (id, name, author, description, p
 console.log("PATCH\t\t/books\t\tUpdate a book by price (price required)");
 console.log("DELETE\t\t/books\t\tDelete a book (id required)")
 
+/*
 const Book = mongoose.model("Book", {
     id: { type: Number },
     name: { type: String },
@@ -63,506 +84,7 @@ const Orders = mongoose.model("Orders", {
     // shelf: { type: String }
 
 })
-
-// List all books with filters.
-router.register({
-    name: 'List of books.',
-    method: 'get',
-    path: '/booksList',
-    handler: async (ctx, next) => {
-
-        const { query } = ctx.request;
-
-        const filteredBooks: Array<object> = [];
-
-        // Loop through all books and filters, only return the books that match the indicated filters.
-        books?.map((book: object | any) => {
-
-            if (book.price <= query.to && book.price >= query.from) {
-                filteredBooks.push(book);
-            }
-        })
-
-        // Send back success result with only books that matched filters to the client.
-        ctx.response.status = 200;
-        ctx.response.body = { filteredBooks }
-
-        await next();
-    },
-    validate: {
-        // Validate input. Make sure we are working with type number and not type string as an example.
-        query: z.object({ from: z.coerce.number(), to: z.coerce.number() }),
-    },
-});
-
-// List all books without filters.
-router.register({
-    name: 'List all books.',
-    method: 'get',
-    path: '/books',
-    handler: async (ctx, next) => {
-
-        // Fetch all books from MongoDB
-        const result = await Book.find({})
-
-        // Display all books if fetch was successful.
-        if (result) {
-            console.log(`Fetching document successful.`);
-            ctx.response.body = { result }
-        }
-        else
-            console.log("Failed to fetch document in database.");
-        await next();
-    }
-});
-
-// List all books with multiple filters (Assignment 3)
-router.register({
-    name: 'List of books.',
-    method: 'get',
-    path: '/booksFilters',
-    handler: async (ctx, next) => {
-
-        const { query } = ctx.request;
-
-        const filteredBooks: Array<object> = [];
-
-        let howManyFilters: string | any = query.howManyFilters as string;
-        let howManyFiltersCorrect: number = 0;
-
-        // Make sure from and to are not counted as individual filters.
-        if (query.from || query.to)
-            howManyFilters = Object.keys(query).length - 1;
-
-        else if (howManyFilters === query.name || query.author)
-            howManyFilters = Object.keys(query).length;
-
-        // Loop through all books and filters, only return the books that match ALL filters.
-        books?.map((book: object | any) => {
-
-            if (query.from != undefined && query.to != undefined && book.price <= query.to && book.price >= query.from)
-                howManyFiltersCorrect++;
-
-            if (query.name != undefined && query.name === book.name)
-                howManyFiltersCorrect++;
-
-            if (query.author != undefined && query.author === book.author)
-                howManyFiltersCorrect++;
-
-            if (howManyFiltersCorrect >= parseInt(howManyFilters))
-                filteredBooks.push(book);
-
-            howManyFiltersCorrect = 0;
-        })
-
-        // Reset the counter.
-        howManyFilters == 0;
-
-        // Send success response back to client
-        ctx.response.status = 200;
-
-
-        ctx.response.body = { ...filteredBooks }
-        //ctx.response.body = { filteredBooks }
-        // ctx.response.body = { books }
-
-        await next();
-    },
-    validate: {
-        // Validate input. Make sure we are working with proper types such as numbers and strings.
-        query: z.object({
-            from: z.optional(z.coerce.number()), to: z.optional(z.coerce.number()),
-            name: z.optional(z.string()), author: z.optional(z.string().optional())
-        }),
-    },
-});
-
-// Create a book.
-router.register({
-    name: 'Create new book.',
-    method: 'post',
-    path: '/books',
-    handler: async (ctx, next) => {
-        const { query } = ctx.request;
-
-        // Create the new book in mongoDB with supplied parameters.
-        const result = await Book.create({
-            id: query.id,
-            name: query.name,
-            author: query.author,
-            description: query.description,
-            price: query.price,
-            image: query.image
-        })
-
-        // Check if we successed in creating a new book or not.
-        if (result) {
-            const resp = `Book was created successfully id: ${query.id}`;
-            console.log(resp);
-            ctx.response.body = { resp }
-        }
-        else {
-            const resp = `Failed to create new book id: ${query.id}.`
-            console.log(resp);
-            ctx.response.body = { resp }
-        }
-        await next();
-    },
-    validate: {
-        // Validate input. Make sure we are working with type number and not type string as an example.
-        query: z.object({
-            // id: z.coerce.number(), name: z.string(),
-            name: z.string(),
-            author: z.string(), description: z.string(),
-            price: z.coerce.number(), image: z.string()
-        }),
-    },
-});
-
-// Update a book's price.
-router.register({
-    name: 'Update a book.',
-    method: 'patch',
-    path: '/books',
-    handler: async (ctx, next) => {
-        const { query } = ctx.request;
-
-        const result = await Book.findOneAndUpdate({ id: query.id }, { price: query.price })
-
-        // Check if we were successful in updating a book by price or not.
-        if (result) {
-            const resp = `Book id ${query.id}, price has been adjusted to ${query.price}:`
-            console.log(resp);
-            ctx.response.body = { resp }
-        }
-        else {
-            const resp = `Failed to update book by price.`
-            console.log(resp);
-            ctx.response.body = { resp }
-        }
-
-        await next();
-    },
-    validate: {
-        // Validate input. Make sure we are working with type number and not type string as an example.
-        query: z.object({
-            id: z.coerce.number(),
-            price: z.coerce.number(),
-        }),
-    },
-});
-
-// Delete a book by id.
-router.register({
-    name: 'Delete a book.',
-    method: 'delete',
-    path: '/books',
-    handler: async (ctx, next) => {
-        const { query } = ctx.request;
-
-        // Delete the book by id.
-        const result = await Book.deleteOne({
-            id: query.id
-        })
-
-        // Check if we successed in deleting book by id.
-        if (result.deletedCount >= 1) {
-            const resp = `Book id ${query.id}, has been removed.:`
-            console.log(resp);
-            ctx.response.body = { resp }
-        }
-        else {
-            const resp = `Failed to remove book (${query.id}).`
-            console.log(resp);
-            ctx.response.body = { resp }
-        }
-
-        await next();
-    },
-    validate: {
-        // Validate input. Make sure we are working with type number and not type string as an example.
-        query: z.object({
-            id: z.coerce.number()
-        }),
-    },
-
-});
-
-
-// Assignment 4. Find book by ID (lookupBookById)
-router.register({
-    name: 'List all books.',
-    method: 'get',
-    path: '/booksAssignment4',
-    handler: async (ctx, next) => {
-        const { query } = ctx.request;
-
-        // Fetch all books from MongoDB
-        const result = await Book.find({ id: query.BookID });
-        //const result = await Book.find({});
-
-        // Display all books if fetch was successful.
-        if (result) {
-            console.log(`Fetching book with bookid: ${query.BookID} successful.`);
-            ctx.response.body = { result }
-        }
-        else
-            console.log(`Failed to fetch book by book id: ${query.BookID}.`);
-        await next();
-    },
-    validate: {
-        // Validate input. Make sure we are working with type number and not type string as an example.
-        query: z.object({
-            BookID: z.coerce.number()
-        }),
-    },
-});
-
-
-
-// Assignment 4. (placeBooksOnShelf)
-router.register({
-    name: 'List all books.',
-    method: 'post',
-    path: '/booksAssignment4/warehouse',
-    handler: async (ctx, next) => {
-        const { query } = ctx.request;
-
-        // Fetch all books from MongoDB
-        //const result = await Book.find({ id: query.id })
-
-        const result = await Shelf.create({
-            bookId: query.bookId,
-            numberOfBooks: query.numberOfBooks,
-            shelf: query.shelf
-        })
-
-        // List all shelves. Delete this later.
-        const shelves = await Shelf.find({})
-
-        console.log("--- SHELVES ---", shelves)
-
-        // Display all books if fetch was successful.
-        if (result) {
-            const resp = `Shelf was created successfully id: ${query.bookId}`;
-            console.log(resp);
-            ctx.response.body = { resp }
-        }
-        else {
-            const resp = `Failed to create new shelf id: ${query.bookId}.`
-            console.log(resp);
-            ctx.response.body = { resp }
-        }
-        await next();
-    },
-
-    validate: {
-
-        query: z.object({
-            bookId: z.string(), numberOfBooks: z.coerce.number(),
-            shelf: z.string()
-        }),
-    },
-
-});
-
-
-
-// Assignment 4. (orderBooks)
-router.register({
-    name: 'Orders books here.',
-    method: 'post',
-    path: '/booksAssignment4/createOrder',
-    handler: async (ctx, next) => {
-        const { query } = ctx.request;
-
-        // Fetch all books from MongoDB
-        //const result = await Book.find({ id: query.id })
-
-        const result = await Orders.create({
-            BookID: query.BookID,
-            OrderId: query.OrderId
-        })
-
-        // List all shelves. Delete this later.
-        const orders = await Orders.find({})
-
-        /*
-        console.log("--- ORDERS ---", orders)
-        console.log("-------- DEBUG BOOK ID -----------", query.BookID)
-        console.log("-------- DEBUG BOOK ID LENGTH -----------", query.BookID?.length)
-        console.log("-------- DEBUG QUERY -----------", query)
 */
-        // NOTE TO SELF
-        // Keep using "params" in POSTMAN, not raw-data or json in body.
-
-        // Display all books if fetch was successful.
-        if (result) {
-            const resp = `Order was created successfully id: ${query.OrderId}`;
-            console.log(resp);
-            ctx.response.body = { resp }
-        }
-        else {
-            const resp = `Failed to create new order id: ${query.OrderId}.`
-            console.log(resp);
-            ctx.response.body = { resp }
-        }
-        await next();
-    },
-
-    validate: {
-
-        query: z.object({
-            OrderId: z.string(),
-            BookID: z.array(z.coerce.number()),
-        }),
-    },
-
-
-});
-
-
-// Assignment 4. (listOrders)
-router.register({
-    name: 'List orders here.',
-    method: 'get',
-    path: '/booksAssignment4/orders',
-    handler: async (ctx, next) => {
-        const { query } = ctx.request;
-
-        // List all orders.
-        const orders = await Orders.find({})
-
-        console.log("--- ORDERS ---", orders)
-
-
-        // Display all books if fetch was successful.
-        if (orders) {
-            const resp = `Orders successfully fetched.\n\n ${orders}`;
-            console.log(resp);
-            ctx.response.body = { ...orders }
-        }
-        else {
-            const resp = `Failed to fetch orders.`
-            console.log(resp);
-            ctx.response.body = { ...orders }
-        }
-        await next();
-    },
-    /*
-        validate: {
-    
-            query: z.object({
-                OrderId: z.string(),
-                BookID: z.array(z.coerce.number()),
-            }),
-        },
-        */
-
-});
-
-
-// Assignment 4. (findBookOnShelf)
-router.register({
-    name: 'Find book on shelf here.',
-    method: 'get',
-    path: '/booksAssignment4/warehouse',
-    handler: async (ctx, next) => {
-        const { query } = ctx.request;
-
-        const result = await Shelf.find({
-            bookId: query.bookId,
-        })
-
-        // Display all books if fetch was successful.
-        if (result) {
-            const resp = `Book ${query.bookId} was found.`;
-            console.log(resp);
-            console.log(result)
-            ctx.response.body = { resp, result }
-        }
-        else {
-            const resp = `Failed to find the book: ${query.bookId}.`
-            console.log(resp);
-            ctx.response.body = { resp }
-        }
-        await next();
-    },
-
-    validate: {
-        query: z.object({
-            bookId: z.string(),
-        }),
-    },
-
-
-});
-
-
-
-// Assignment 4. (fulfillOrder)
-router.register({
-    name: 'Fulfil an order.',
-    method: 'post',
-    path: '/booksAssignment4/Fulfillorders',
-    handler: async (ctx, next) => {
-        const { query }: any = ctx.request;
-
-        //var myquery: [{}] | any;
-
-        // myquery = query;
-
-        console.log("----------- query ---------", query);
-        //console.log("query length", query.length);
-
-        var result;
-
-        if (query !== undefined && query !== null) {
-            query?.map(async (oneElement: any) => {
-                result = await Orders.create({
-                    BookID: oneElement.BookID,
-                    OrderId: oneElement.OrderId,
-                    ShelfID: oneElement.ShelfID,
-                    numberOfBooks: oneElement.numberOfBooks,
-                })
-
-            })
-        }
-
-        /*
-        const result = await Orders.create({
-            BookID: query.BookID,
-            OrderId: query.OrderId,
-            ShelfID: query.ShelfID,
-            numberOfBooks: query.numberOfBooks
-        })
-*/
-        // Display all books if fetch was successful.
-        if (result) {
-            const resp = `Order ${query.OrderId} was fulfilled.`;
-            console.log(resp);
-            console.log(result)
-            ctx.response.body = { resp, result }
-        }
-        else {
-            const resp = `Failed to fulfill the order: ${query.OrderId}.`
-            console.log(resp);
-            ctx.response.body = { resp }
-        }
-        await next();
-    },
-    /*
-        validate: {
-            query: z.object({
-                OrderId: z.string(),
-                BookID: z.array(z.coerce.number()),
-                ShelfID: z.string(),
-                numberOfBooks: z.coerce.number(),
-            }),
-        },
-    */
-
-});
 
 
 
