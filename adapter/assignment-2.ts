@@ -70,7 +70,7 @@ async function listBooks(filters?: Array<{ from?: number, to?: number }>): Promi
             Should await the fetch itself.
             Have the fetch itself return the book as an book array
     */
-    fetch(`${fetchUrl}`)
+    const result = await fetch(`${fetchUrl}`)
         .then(res => res.json())
         .then((data: object | any) => {
             console.log("FETCH RESPONSE.......", data);
