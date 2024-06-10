@@ -106,9 +106,6 @@ export const orderBooks = createRouteSpec({
     handler: async (ctx, next) => {
         const { query } = ctx.request;
 
-        // Fetch all books from MongoDB
-        //const result = await Book.find({ id: query.id })
-
         const result = await Orders.create({
             BookID: query.BookID,
             OrderId: query.OrderId
@@ -116,15 +113,6 @@ export const orderBooks = createRouteSpec({
 
         // List all shelves. Delete this later.
         const orders = await Orders.find({})
-
-        /*
-        console.log("--- ORDERS ---", orders)
-        console.log("-------- DEBUG BOOK ID -----------", query.BookID)
-        console.log("-------- DEBUG BOOK ID LENGTH -----------", query.BookID?.length)
-        console.log("-------- DEBUG QUERY -----------", query)
-*/
-        // NOTE TO SELF
-        // Keep using "params" in POSTMAN, not raw-data or json in body.
 
         // Display all books if fetch was successful.
         if (result) {
@@ -141,7 +129,6 @@ export const orderBooks = createRouteSpec({
     },
 
     validate: {
-
         query: z.object({
             OrderId: z.string(),
             BookID: z.array(z.coerce.number()),
