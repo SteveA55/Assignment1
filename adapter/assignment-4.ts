@@ -134,14 +134,22 @@ async function listOrders(): Promise<Array<{ orderId: OrderId, books: Record<Boo
 
   var fetchUrl: string | undefined = `${baseUrl}/orders?`;
 
-  const response = await fetch(`${fetchUrl}`);
+  const response: any = await fetch(`${fetchUrl}`)
+    .then(res => res.json())
+    .then((data: object | any) => {
+      console.log("Response data::::::::::::", data);
+      return Object.keys(data).map((key) => data[key]); // Had to convert the result into an array and return it - there wasn't any return value before.
+      //books.push(data);
+    }).catch((err) => {
+      console.log("FETCH ERROR.........", err)
+    });
   //const data: Promise<Book[]> = await response.json() as Promise<Book[]>;
-  const data: Promise<listOrders[]> = await response.json() as Promise<listOrders[]>;
+  //const data: Promise<listOrders[]> = await response.json() as Promise<listOrders[]>;
 
-  console.log("listOrders....listOrders.....listOrders", data)
+  //console.log("listOrders....listOrders.....listOrders", data)
 
-
-  return (data);
+  console.log("@@@@@ RESPONSE ARRAY????? @@@@@@@@@", JSON.stringify(response));
+  return (response);
   //throw new Error("Todo")
 }
 

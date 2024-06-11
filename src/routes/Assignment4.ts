@@ -213,7 +213,7 @@ export const findBookOnShelf = createRouteSpec({
 // Assignment 4. (fulfillOrder)
 export const fulfillOrder = createRouteSpec({
     name: 'Fulfil an order.',
-    method: 'post',
+    method: 'get',
     path: '/booksAssignment4/Fulfillorders',
     handler: async (ctx, next) => {
         const { query }: any = ctx.request;
@@ -228,11 +228,11 @@ export const fulfillOrder = createRouteSpec({
         var result;
 
         if (query !== undefined && query !== null) {
-            query?.map(async (oneElement: any) => {
+            query?.booksFulfilled?.map(async (oneElement: any) => {
                 result = await Orders.create({
                     BookID: oneElement.BookID,
                     OrderId: oneElement.OrderId,
-                    ShelfID: oneElement.ShelfID,
+                    ShelfID: oneElement.ShelfId,
                     numberOfBooks: oneElement.numberOfBooks,
                 })
 
