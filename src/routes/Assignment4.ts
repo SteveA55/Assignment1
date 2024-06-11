@@ -1,7 +1,7 @@
-import zodRouter from 'koa-zod-router';
+//import zodRouter from 'koa-zod-router';
 import { createRouteSpec } from 'koa-zod-router';
 import { z } from 'zod';
-const router = zodRouter();
+//const router = zodRouter();
 
 const mongoose = require("mongoose");
 import { Book } from "../models/books";
@@ -111,9 +111,6 @@ export const orderBooks = createRouteSpec({
             OrderId: query.OrderId
         })
 
-        // List all shelves. Delete this later.
-        const orders = await Orders.find({})
-
         // Display all books if fetch was successful.
         if (result) {
             const resp = `Order was created successfully id: ${query.OrderId}`;
@@ -146,7 +143,7 @@ export const listOrders = createRouteSpec({
     method: 'get',
     path: '/booksAssignment4/orders',
     handler: async (ctx, next) => {
-        const { query } = ctx.request;
+        // const { query } = ctx.request;
 
         // List all orders.
         const orders = await Orders.find({})

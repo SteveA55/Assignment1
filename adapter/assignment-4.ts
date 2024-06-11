@@ -92,6 +92,8 @@ async function orderBooks(order: BookID[]): Promise<{ orderId: OrderId }> {
     if (index >= 1) fetchUrl += "&"
   })
 
+  console.log("*** orderBooks fetchUrl ****", fetchUrl)
+
   const response = await fetch(`${fetchUrl}`);
   //const data: Promise<Book[]> = await response.json() as Promise<Book[]>;
   const data: Promise<OrderIdKeyValue> = await response.json() as Promise<OrderIdKeyValue>;
@@ -135,6 +137,7 @@ async function listOrders(): Promise<Array<{ orderId: OrderId, books: Record<Boo
   const data: Promise<listOrders[]> = await response.json() as Promise<listOrders[]>;
 
   console.log("listOrders....listOrders.....listOrders", data)
+
 
   return (data);
   //throw new Error("Todo")

@@ -1,4 +1,4 @@
-import assignment1 from "./assignment-1";
+//import assignment1 from "./assignment-1";
 //import axios from "axios";
 import * as Yup from "yup";
 
@@ -35,16 +35,16 @@ async function listBooks(filters?: Array<{ from?: number, to?: number }>): Promi
  when no from or to query is provided.
 */
     if (filters === undefined) { return []; }
-    const defaultFilterFrom = 0;
-    const defaultFilterTo = 100;
 
 
-    var fetchUrl;
+    var fetchUrl, validateResult;
 
-
-    const errors = validationSchema.validate(filters[0]);
-    validationSchema.validate(filters[0]);
-
+    try {
+        validateResult = await validationSchema.validate(filters[0]);
+    } catch (err) {
+        console.log("Validation ERROR:", err);
+        throw new Error(`Validation ERROR ${err}`)
+    }
     if (filters[0]?.from != undefined && filters[0]?.to != undefined)
         fetchUrl = `http://localhost:3000/booksList?from=${filters[0].from}&to=${filters[0].to}`;
 

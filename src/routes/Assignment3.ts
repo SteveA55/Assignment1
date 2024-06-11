@@ -1,13 +1,13 @@
-import zodRouter from 'koa-zod-router';
+//import zodRouter from 'koa-zod-router';
 import { createRouteSpec } from 'koa-zod-router';
 import { z } from 'zod';
 const fs = require("fs");
-const router = zodRouter();
+//const router = zodRouter();
 
 const mongoose = require("mongoose");
 import { Book } from "../models/books";
-import { Orders } from "../models/orders";
-import { Shelf } from "../models/shelf";
+//import { Orders } from "../models/orders";
+//import { Shelf } from "../models/shelf";
 
 export type BookID = string;
 
@@ -53,7 +53,7 @@ export const listBooksMultipleFilters = createRouteSpec({
         // Send success response back to client
         ctx.response.status = 200;
 
-        ctx.response.body = { ...filteredBooks }
+        ctx.body = { ...filteredBooks }
         //ctx.response.body = { filteredBooks }
         // ctx.response.body = { books }
         await next();
