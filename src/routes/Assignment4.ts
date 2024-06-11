@@ -101,7 +101,7 @@ export const placeBooksOnShelf = createRouteSpec({
 // Assignment 4. (orderBooks)
 export const orderBooks = createRouteSpec({
     name: 'Orders books here.',
-    method: 'post',
+    method: 'get',
     path: '/booksAssignment4/createOrder',
     handler: async (ctx, next) => {
         const { query } = ctx.request;

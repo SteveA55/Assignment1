@@ -83,6 +83,8 @@ async function orderBooks(order: BookID[]): Promise<{ orderId: OrderId }> {
   var fetchUrl: string | undefined = `${baseUrl}/createOrder?`;
   //var fetchUrl: string | undefined = `${baseUrl}?BookID=${book}`;
 
+  console.log("^^^^^^^^^DEBUG ORDERBOOKS^^^^^^^", order)
+
   // Going to have .map through array
   // Since having trouble on backend with query as array prefer to do it on frontend.
   order?.map((oneBookID, index) => {

@@ -28,6 +28,8 @@ async function listBooks(filters?: Filter[]): Promise<Book[]> {
   // If a from number is provided but not a to number. to is default to 100.
   // If a to number is provided but not a from number. from is default to 1.
 
+  console.log("----- DEBUG ASSIGNMENT 3 LIST BOOKS----------");
+
   const validationSchema = Yup.array().of(
     Yup.object().shape({
       from: Yup.number().optional().positive(),
@@ -81,7 +83,7 @@ async function listBooks(filters?: Filter[]): Promise<Book[]> {
 
     })
   }
-
+  console.log("----- ASSIGNMENT 3 LIST BOOKS, FETCH URL----------", fetchUrl);
 
 
   // We submitted this in Assignment 3. But the following version below this one
@@ -96,17 +98,27 @@ async function listBooks(filters?: Filter[]): Promise<Book[]> {
      })
  */
 
-
+  const Books: Book[] = [];
   // Cleaner code than previously (above).
   // proper type Book[] is used rather than type "any"
 
   // Send our filters to the backend and retrieve the resulting books.
-  const response = await fetch(`${fetchUrl}`);
-  const data: Promise<Book[]> = await response.json() as Promise<Book[]>;
+  const response: any = await fetch(`${fetchUrl}`) // Had to add an await here, since we need to wait for the fetch to conclude
+    .then(res => res.json())
+    .then((data: object | any) => {
+      console.log("Response data::::::::::::", data);
+      return Object.keys(data).map((key) => data[key]); // Had to convert the result into an array and return it - there wasn't any return value before.
+      //books.push(data);
+    }).catch((err) => {
+      console.log("FETCH ERROR.........", err)
+    })
+  //const data: Promise<Book[]> = await response.json() as Promise<Book[]>;
   //console.log("------ response -------", await response.json())
   //return await response.json() as Book[];
   //console.log("---------books--------", data)
-  return (data);
+  //console.log("########## DATA ############", data)
+  return (response);
+  //return (await Books as Book[])
 }
 
 async function createOrUpdateBook(book: Book): Promise<BookID> {

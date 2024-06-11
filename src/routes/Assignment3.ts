@@ -27,6 +27,7 @@ export const listBooksMultipleFilters = createRouteSpec({
     method: 'get',
     path: '/booksFilters',
     handler: async (ctx, next) => {
+        console.log("%%%%%%%%%%%%%%%%%%%%%%%")
         const { query } = ctx.request;
         const filteredBooks: Array<object> = [];
         let howManyFilters: string | any = query.howManyFilters as string;
@@ -52,6 +53,8 @@ export const listBooksMultipleFilters = createRouteSpec({
         howManyFilters == 0;
         // Send success response back to client
         ctx.response.status = 200;
+
+        console.log("$$$$$$$$$$$$$$$$$$$$", filteredBooks)
 
         ctx.body = { ...filteredBooks }
         //ctx.response.body = { filteredBooks }
