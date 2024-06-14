@@ -12,35 +12,25 @@ export interface Book {
     price: number,
     image: string,
 }
-/*
-interface myBooks {
-    filteredBooks: Book,
-}
-*/
-
 
 
 async function listBooks(filters?: Array<{ from?: number, to?: number }>): Promise<Book[]> {
 
 
+    // Validate our input on the frontend to make sure the input is as expected.
     const validationSchema = Yup.object({
         from: Yup.number().optional().positive(),
         to: Yup.number().optional().positive()
     });
 
-    /*
- Set our fetch URL based upon supplied from and to query.
- If no from or to query exists, create a default value.
- This prevents fatal TypeError from crashing our application
- when no from or to query is provided.
-*/
+
     if (filters === undefined) { return []; }
 
 
     var fetchUrl;
 
     try {
-
+        // Test our input against the proper validation.
         await validationSchema.validate(filters[0]);
 
     } catch (err) {
@@ -50,6 +40,8 @@ async function listBooks(filters?: Array<{ from?: number, to?: number }>): Promi
 
     }
 
+    // We have to adjust our params sent to the backend based upon the critea of the supplied input which
+    // could be supplied in various formats.
     if (filters[0]?.from != undefined && filters[0]?.to != undefined)
         fetchUrl = `http://localhost:3000/booksList?from=${filters[0].from}&to=${filters[0].to}`;
 
@@ -61,14 +53,24 @@ async function listBooks(filters?: Array<{ from?: number, to?: number }>): Promi
 
     const Books: Book[] = [];
 
+    // Fetch the URL on the backend and await the result.
     await fetch(`${fetchUrl}`)
+
+        // Convert the response to JSON format for processing.
         .then(res => res.json())
+
         .then((data: object | any) => {
+
             data.filteredBooks.map((eachBook: Book) => {
+
+                // Since we are desiring an array as the end result. Push the element onto our array.
                 Books.push(eachBook);
+
             })
         }).catch((err) => {
+
             console.log("FETCH ERROR.........", err)
+
         })
 
 
@@ -80,39 +82,61 @@ async function listBooks(filters?: Array<{ from?: number, to?: number }>): Promi
 
 async function createOrUpdateBook(book: Book): Promise<BookID> {
 
-    // DEBUG
-    console.log("...........Book............", book)
+
 
     // Unable to get it working with de-coded OR en-coded url params.
-    console.log("--------------DECODED-------------------", decodeURI(JSON.stringify(book)));
     const bookParams: string = decodeURI(JSON.stringify(book));
+
     const result: Book | any = fetch(`http://localhost:3000/books?${bookParams}`, {
+
         method: "POST"
-    }).then(res => res.json())
+
+    })
+
+        // Convert the response to JSON format for processing.
+        .then(res => res.json())
+
         .then((data: object | any) => {
+
             console.log("........data........", data)
+
         }).catch((err) => {
+
             console.log("FETCH ERROR.........", err)
+
         })
-    //throw new Error("Todo")
+
+
     return (await result)
+
 }
+
 
 async function removeBook(book: BookID): Promise<void> {
 
-    // DEBUG
-    console.log("---------(REMOVE) BOOK ID----------", book)
 
     const result: Promise<void> = fetch(`http://localhost:3000/books?${book}`, {
+
         method: "DELETE"
-    }).then(res => res.json())
+
+    })
+
+        // Conver the response to JSON format for processing.
+        .then(res => res.json())
+
         .then((data: object | any) => {
+
             console.log("........data........", data)
+
         }).catch((err) => {
+
             console.log("FETCH ERROR.........", err)
+
         })
-    //throw new Error("Todo")
+
+
     return result;
+
 }
 
 const assignment = "assignment-2";
