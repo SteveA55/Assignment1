@@ -65,9 +65,7 @@ export const listBooks = createRouteSpec({
 
     // Make sure we are working with the expected input. Input validation check.
     validate: {
-        // Validate input. Make sure we are working with type number and not type string as an example.
         query: z.object({ from: z.optional(z.coerce.number()), to: z.optional(z.coerce.number()) }),
-        //query: z.object({ from: z.coerce.number(), to: z.coerce.number() }),
     },
 
 });
