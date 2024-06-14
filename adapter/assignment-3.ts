@@ -28,8 +28,6 @@ async function listBooks(filters?: Filter[]): Promise<Book[]> {
   // If a from number is provided but not a to number. to is default to 100.
   // If a to number is provided but not a from number. from is default to 1.
 
-  console.log("----- DEBUG ASSIGNMENT 3 LIST BOOKS----------");
-
   const validationSchema = Yup.array().of(
     Yup.object().shape({
       from: Yup.number().optional().positive(),
@@ -83,7 +81,6 @@ async function listBooks(filters?: Filter[]): Promise<Book[]> {
 
     })
   }
-  console.log("----- ASSIGNMENT 3 LIST BOOKS, FETCH URL----------", fetchUrl);
 
 
   // We submitted this in Assignment 3. But the following version below this one

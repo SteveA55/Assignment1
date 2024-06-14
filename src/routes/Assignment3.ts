@@ -1,23 +1,25 @@
-//import zodRouter from 'koa-zod-router';
 import { createRouteSpec } from 'koa-zod-router';
 import { z } from 'zod';
+
 const fs = require("fs");
-//const router = zodRouter();
 
 const mongoose = require("mongoose");
+
+// Import our mongoose document models.
 import { Book } from "../models/books";
-//import { Orders } from "../models/orders";
-//import { Shelf } from "../models/shelf";
 
 export type BookID = string;
 
+// Set our mongoDB url to connect to.
 const DB = "mongodb://mongo:27017";
 
+// Connect to our mongoDB inside the dev container. Output the result and check if an error occured.
 mongoose
     .connect(DB, {})
     .then(() => console.log("DB connection successful!"))
     .catch((err: string) => console.log("Mongoose DB connection error: ", err));
 
+// This is the local file containing our list of books in JSON format for processing.
 const books: Array<object> = JSON.parse(fs.readFileSync(`./mcmasteful-book-list.json`, 'utf8'));
 
 
@@ -27,7 +29,7 @@ export const listBooksMultipleFilters = createRouteSpec({
     method: 'get',
     path: '/booksFilters',
     handler: async (ctx, next) => {
-        console.log("%%%%%%%%%%%%%%%%%%%%%%%")
+
         const { query } = ctx.request;
         const filteredBooks: Array<object> = [];
         let howManyFilters: string | any = query.howManyFilters as string;
@@ -54,7 +56,7 @@ export const listBooksMultipleFilters = createRouteSpec({
         // Send success response back to client
         ctx.response.status = 200;
 
-        console.log("$$$$$$$$$$$$$$$$$$$$", filteredBooks)
+
 
         ctx.body = { ...filteredBooks }
         //ctx.response.body = { filteredBooks }
