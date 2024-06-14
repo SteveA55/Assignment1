@@ -11,46 +11,56 @@ export interface Book {
   description: string
   price: number
   image: string
-};
+}
 
 export interface Filter {
   from?: number
   to?: number
   name?: string
   author?: string
-};
+}
 
 // If multiple filters are provided, any book that matches at least one of them should be returned
 // Within a single filter, a book would need to match all the given conditions
 async function listBooks(filters?: Filter[]): Promise<Book[]> {
 
-  // This code makes an assumption:
-  // If a from number is provided but not a to number. to is default to 100.
-  // If a to number is provided but not a from number. from is default to 1.
-
+  // Validate our input on the frontend to make sure it is as expected.
   const validationSchema = Yup.array().of(
+
     Yup.object().shape({
+
       from: Yup.number().optional().positive(),
       to: Yup.number().optional().positive(),
       name: Yup.string().optional(),
       author: Yup.string().optional(),
+
     })
+
   );
 
   let result;
 
   // Perform validation on our filters. Log errors that may occur.
   if (filters != undefined) {
+
     try {
+
       result = await validationSchema.validate(filters);
+
     } catch (err: unknown) {
+
       console.log("ERROR validation: ", err)
       throw new Error(`Validation ERROR ${err}`)
+
     }
+
   }
 
+  // If our validation on the froentend was a success, log the result to console.
   if (result) {
+
     console.log("Yup (validation) result: ", result);
+
   }
 
   if (filters != undefined) {
@@ -83,47 +93,44 @@ async function listBooks(filters?: Filter[]): Promise<Book[]> {
   }
 
 
-  // We submitted this in Assignment 3. But the following version below this one
-  // is a little cleaner.
-  /* var fetchResult: any = fetch(`${fetchUrl}`)
-     .then(res => res.json())
-     .then((data: object | any) => {
-       console.log("Response data::::::::::::", data);
-       //books.push(data);
-     }).catch((err) => {
-       console.log("FETCH ERROR.........", err)
-     })
- */
-
-  const Books: Book[] = [];
-  // Cleaner code than previously (above).
-  // proper type Book[] is used rather than type "any"
-
   // Send our filters to the backend and retrieve the resulting books.
-  const response: any = await fetch(`${fetchUrl}`) // Had to add an await here, since we need to wait for the fetch to conclude
+  // Had to add an await here, since we need to wait for the fetch to conclude
+  const response: any = await fetch(`${fetchUrl}`)
+
+    // Convert the result to JSON format for processing.
     .then(res => res.json())
+
     .then((data: object | any) => {
-      //console.log("Response data::::::::::::", data);
-      return Object.keys(data).map((key) => data[key]); // Had to convert the result into an array and return it - there wasn't any return value before.
-      //books.push(data);
-    }).catch((err) => {
-      console.log("FETCH ERROR.........", err)
+
+      // Had to convert the result into an array and return it - there wasn't any return value before.
+      return Object.keys(data).map((key) => data[key]);
+
     })
-  //const data: Promise<Book[]> = await response.json() as Promise<Book[]>;
-  //console.log("------ response -------", await response.json())
-  //return await response.json() as Book[];
-  //console.log("---------books--------", data)
-  console.log("########## DATA ############", response)
+
+    // Log any errors that may occur.
+    .catch((err) => {
+
+      console.log("FETCH ERROR.........", err)
+
+    })
+
+  // Verify that our result has return as expected.
+  console.log("... Assignment 3 listBooks data ... ", response)
+
   return (response);
-  //return (await Books as Book[])
+
 }
 
 async function createOrUpdateBook(book: Book): Promise<BookID> {
+
   return await previous_assignment.createOrUpdateBook(book)
+
 }
 
 async function removeBook(book: BookID): Promise<void> {
+
   await previous_assignment.removeBook(book)
+
 }
 
 const assignment = 'assignment-3'

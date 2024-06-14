@@ -1,10 +1,10 @@
 import Koa from 'koa';
 import zodRouter from 'koa-zod-router';
-import applyRoutes from 'koa-zod-router';
-import { z } from 'zod';
+
+import { } from 'zod';
 //import assignment1 from "../adapter/assignment-1";
-import assignment2 from "../adapter/assignment-2";
-import { Query } from 'mongoose';
+//import assignment2 from "../adapter/assignment-2";
+import { } from 'mongoose';
 
 // Import our routes from previous assignments in a more organized manner.
 import { listBooks } from './routes/Assignment1and2';
@@ -12,15 +12,10 @@ import { listBooksMultipleFilters, createBook, updateBook, deleteBook, } from '.
 import { lookupBookById, placeBooksOnShelf, orderBooks, listOrders, findBookOnShelf, fulfilOrder } from './routes/Assignment4';
 
 const cors = require('@koa/cors');
-const fs = require("fs");
 const app = new Koa();
 const router = zodRouter();
 
 const mongoose = require("mongoose");
-
-import { Book } from "./models/books";
-import { Orders } from "./models/orders";
-import { Shelf } from "./models/shelf";
 
 /* Assignment 1 & 2 */
 router.register(listBooks);
@@ -41,8 +36,6 @@ router.register(fulfilOrder);
 
 // CORS support.
 app.use(cors())
-
-const books: Array<object> = JSON.parse(fs.readFileSync(`./mcmasteful-book-list.json`, 'utf8'));
 
 export type BookID = string;
 

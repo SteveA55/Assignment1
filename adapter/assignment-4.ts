@@ -1,4 +1,4 @@
-import { string } from 'zod'
+import { } from 'zod'
 import previous_assignment from './assignment-3'
 
 export type BookID = string
@@ -11,14 +11,14 @@ export interface Book {
   price: number
   image: string
   stock?: number
-};
+}
 
 export interface Filter {
   from?: number
   to?: number
   name?: string
   author?: string
-};
+}
 
 
 
@@ -56,7 +56,7 @@ var baseUrl: string = "http://localhost:3000/booksAssignment4";
 async function lookupBookById(book: BookID): Promise<Book> {
 
   // Add our params to the url.
-  var fetchUrl: string | undefined = `${baseUrl}?BookID=${book}`;
+  const fetchUrl: string | undefined = `${baseUrl}?BookID=${book}`;
 
   // Fetch the response on the backend and await the results.
   const response = await fetch(`${fetchUrl}`);
@@ -75,7 +75,7 @@ export type OrderId = string
 async function placeBooksOnShelf(bookId: BookID, numberOfBooks: number, shelf: ShelfId): Promise<void> {
 
   // Add our params to the url.
-  var fetchUrl: string | undefined = `${baseUrl}/warehouse?bookId=${bookId}&numberOfBooks=${numberOfBooks}&shelf=${shelf}`;
+  const fetchUrl: string | undefined = `${baseUrl}/warehouse?bookId=${bookId}&numberOfBooks=${numberOfBooks}&shelf=${shelf}`;
 
   // Fetch the response on the backend and await the results.
   const response = await fetch(`${fetchUrl}`);
@@ -114,7 +114,7 @@ async function orderBooks(order: BookID[]): Promise<{ orderId: OrderId }> {
 async function findBookOnShelf(book: BookID): Promise<Array<{ shelf: ShelfId, count: number }>> {
 
   // Add our params to the url.
-  var fetchUrl: string | undefined = `${baseUrl}/warehouse?bookId=${book}`;
+  const fetchUrl: string | undefined = `${baseUrl}/warehouse?bookId=${book}`;
 
   // Fetch the response on the backend and await the results.
   const response = await fetch(`${fetchUrl}`);
@@ -157,7 +157,7 @@ async function fulfilOrder(order: OrderId, booksFulfilled: Array<{ book: BookID,
 async function listOrders(): Promise<Array<{ orderId: OrderId, books: Record<BookID, number> }>> {
 
   // Add our sub url to the base url.
-  var fetchUrl: string | undefined = `${baseUrl}/orders?`;
+  const fetchUrl: string | undefined = `${baseUrl}/orders?`;
 
   // Fetch the response on the backend and await the results.
   const response: any = await fetch(`${fetchUrl}`)

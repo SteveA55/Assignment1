@@ -4,7 +4,7 @@ export interface Book {
     description: string,
     price: number,
     image: string,
-};
+}
 
 
 // If you have multiple filters, a book matching any of them is a match.
