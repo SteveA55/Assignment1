@@ -26,8 +26,8 @@
     "zod": "^3.23.6"
   },
   "devDependencies": {
-    "@eslint/js": "^9.3.0",
-    "eslint": "^9.3.0",
+    "@eslint/js": "^8",
+    "eslint": "^8",
     "globals": "^15.3.0",
     "typescript": "^5.4.5",
     "typescript-eslint": "^7.10.0",

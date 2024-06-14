@@ -8,7 +8,7 @@ import { Query } from 'mongoose';
 
 import { listBooks } from './routes/Assignment1and2';
 import { listBooksMultipleFilters, createBook, updateBook, deleteBook, } from './routes/Assignment3';
-import { lookupBookById, placeBooksOnShelf, orderBooks, listOrders, findBookOnShelf, fulfillOrder } from './routes/Assignment4';
+import { lookupBookById, placeBooksOnShelf, orderBooks, listOrders, findBookOnShelf, fulfilOrder } from './routes/Assignment4';
 
 
 const cors = require('@koa/cors');
@@ -36,7 +36,7 @@ router.register(placeBooksOnShelf);
 router.register(orderBooks);
 router.register(listOrders);
 router.register(findBookOnShelf);
-router.register(fulfillOrder);
+router.register(fulfilOrder);
 
 
 app.use(cors())

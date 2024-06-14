@@ -106,7 +106,7 @@ async function listBooks(filters?: Filter[]): Promise<Book[]> {
   const response: any = await fetch(`${fetchUrl}`) // Had to add an await here, since we need to wait for the fetch to conclude
     .then(res => res.json())
     .then((data: object | any) => {
-      console.log("Response data::::::::::::", data);
+      //console.log("Response data::::::::::::", data);
       return Object.keys(data).map((key) => data[key]); // Had to convert the result into an array and return it - there wasn't any return value before.
       //books.push(data);
     }).catch((err) => {
@@ -116,7 +116,7 @@ async function listBooks(filters?: Filter[]): Promise<Book[]> {
   //console.log("------ response -------", await response.json())
   //return await response.json() as Book[];
   //console.log("---------books--------", data)
-  //console.log("########## DATA ############", data)
+  console.log("########## DATA ############", response)
   return (response);
   //return (await Books as Book[])
 }

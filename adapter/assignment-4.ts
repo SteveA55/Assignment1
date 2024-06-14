@@ -72,8 +72,14 @@ export type ShelfId = string
 export type OrderId = string
 
 async function placeBooksOnShelf(bookId: BookID, numberOfBooks: number, shelf: ShelfId): Promise<void> {
-  // Backend is built.
-  throw new Error("Todo")
+  var fetchUrl: string | undefined = `${baseUrl}/warehouse?bookId=${bookId}&numberOfBooks=${numberOfBooks}&shelf=${shelf}`;
+
+  const response = await fetch(`${fetchUrl}`);
+  const data: Promise<void> = await response.json() as Promise<void>;
+
+  console.log("placeBooksOnShelf....placeBooksOnShelf...placeBooksOnShelf", data)
+
+  return (data);
 }
 
 async function orderBooks(order: BookID[]): Promise<{ orderId: OrderId }> {
@@ -122,8 +128,27 @@ async function findBookOnShelf(book: BookID): Promise<Array<{ shelf: ShelfId, co
 }
 
 async function fulfilOrder(order: OrderId, booksFulfilled: Array<{ book: BookID, shelf: ShelfId, numberOfBooks: number }>): Promise<void> {
-  // HALFWAY built.
-  throw new Error("Todo")
+
+  var fetchUrl: string | undefined = `${baseUrl}/Fulfilorders?`;
+
+  booksFulfilled?.map((oneBook: any, index) => {
+    fetchUrl += `bookfulfilled[${index}]=${oneBook[index].BookID}&`
+    fetchUrl += `bookfulfilled[${index}]=${oneBook[index].OrderId}&`
+    fetchUrl += `bookfulfilled[${index}]=${oneBook[index].ShelfId}&`
+    fetchUrl += `bookfulfilled[${index}]=${oneBook[index].numberOfBooks}&`
+
+    // Add & only if we are NOT on the first iteration, possible bug fix before bug even exists.
+    if (index >= 1) fetchUrl += "&"
+  })
+
+  console.log("%%%%% FETCHURL %%%%%%%%%", fetchUrl);
+
+  const response = await fetch(`${fetchUrl}`);
+  const data: Promise<void> = await response.json() as Promise<void>;
+
+  console.log("fulfilOrder....fulfilOrder...fulfilOrder", data)
+
+  return (data);
 }
 
 
@@ -142,6 +167,7 @@ async function listOrders(): Promise<Array<{ orderId: OrderId, books: Record<Boo
       //books.push(data);
     }).catch((err) => {
       console.log("FETCH ERROR.........", err)
+      throw new Error("Fetch error has occured........");
     });
   //const data: Promise<Book[]> = await response.json() as Promise<Book[]>;
   //const data: Promise<listOrders[]> = await response.json() as Promise<listOrders[]>;

@@ -210,20 +210,13 @@ export const findBookOnShelf = createRouteSpec({
 
 
 
-// Assignment 4. (fulfillOrder)
-export const fulfillOrder = createRouteSpec({
+// Assignment 4. (fulfilOrder)
+export const fulfilOrder = createRouteSpec({
     name: 'Fulfil an order.',
     method: 'get',
-    path: '/booksAssignment4/Fulfillorders',
+    path: '/booksAssignment4/Fulfilorders',
     handler: async (ctx, next) => {
         const { query }: any = ctx.request;
-
-        //var myquery: [{}] | any;
-
-        // myquery = query;
-
-        console.log("----------- query ---------", query);
-        //console.log("query length", query.length);
 
         var result;
 
@@ -239,14 +232,6 @@ export const fulfillOrder = createRouteSpec({
             })
         }
 
-        /*
-        const result = await Orders.create({
-            BookID: query.BookID,
-            OrderId: query.OrderId,
-            ShelfID: query.ShelfID,
-            numberOfBooks: query.numberOfBooks
-        })
-*/
         // Display all books if fetch was successful.
         if (result) {
             const resp = `Order ${query.OrderId} was fulfilled.`;
@@ -255,21 +240,27 @@ export const fulfillOrder = createRouteSpec({
             ctx.response.body = { resp, result }
         }
         else {
-            const resp = `Failed to fulfill the order: ${query.OrderId}.`
+            console.log("------------- QUERY ------------------", query)
+            const resp = `Failed to fulfill the order: ` + query.booksFulfilled[0].OrderId;
             console.log(resp);
             ctx.response.body = { resp }
         }
         await next();
     },
+
     /*
-        validate: {
-            query: z.object({
-                OrderId: z.string(),
-                BookID: z.array(z.coerce.number()),
-                ShelfID: z.string(),
-                numberOfBooks: z.coerce.number(),
-            }),
-        },
+       validate: {
+           query: z.object({
+               booksFulfilled: z.array(
+                   z.object({
+                       OrderId: z.string(),
+                       BookID: z.coerce.number(),
+                       ShelfId: z.string(),
+                       numberOfBooks: z.coerce.number(),
+                   }),
+               ),
+           }),
+       },
     */
 
 });
