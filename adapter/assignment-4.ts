@@ -39,7 +39,7 @@ export interface shelve {
 // If multiple filters are provided, any book that matches at least one of them should be returned
 // Within a single filter, a book would need to match all the given conditions
 async function listBooks(filters?: Filter[]): Promise<Book[]> {
-  return await previous_assignment.listBooks(filters); // I added this previous assignment line, not instructor.
+  return await previous_assignment.listBooks(filters);
 }
 
 async function createOrUpdateBook(book: Book): Promise<BookID> {
@@ -50,87 +50,88 @@ async function removeBook(book: BookID): Promise<void> {
   await previous_assignment.removeBook(book)
 }
 
+// Set the base url to avoid repeating code.
 var baseUrl: string = "http://localhost:3000/booksAssignment4";
 
 async function lookupBookById(book: BookID): Promise<Book> {
-  // Backend is built.
-  // Frontend can't see anything in console.log
 
+  // Add our params to the url.
   var fetchUrl: string | undefined = `${baseUrl}?BookID=${book}`;
 
+  // Fetch the response on the backend and await the results.
   const response = await fetch(`${fetchUrl}`);
   const data: Promise<Book> = await response.json() as Promise<Book>;
 
+  // Verify we are returning the correct data.
   console.log("lookupBookById....lookupBookById...lookupBookById", data)
 
   return (data as Promise<Book>);
 
-  //throw new Error("Todo")
 }
 
 export type ShelfId = string
 export type OrderId = string
 
 async function placeBooksOnShelf(bookId: BookID, numberOfBooks: number, shelf: ShelfId): Promise<void> {
+
+  // Add our params to the url.
   var fetchUrl: string | undefined = `${baseUrl}/warehouse?bookId=${bookId}&numberOfBooks=${numberOfBooks}&shelf=${shelf}`;
 
+  // Fetch the response on the backend and await the results.
   const response = await fetch(`${fetchUrl}`);
   const data: Promise<void> = await response.json() as Promise<void>;
 
+  // Verify we are returning the correct data.
   console.log("placeBooksOnShelf....placeBooksOnShelf...placeBooksOnShelf", data)
 
   return (data);
 }
 
 async function orderBooks(order: BookID[]): Promise<{ orderId: OrderId }> {
-  // Backend is built.
-  // Frontend is built, however we are un-able to test it.
 
+  // Add our params to the url.
   var fetchUrl: string | undefined = `${baseUrl}/createOrder?`;
-  //var fetchUrl: string | undefined = `${baseUrl}?BookID=${book}`;
 
-  console.log("^^^^^^^^^DEBUG ORDERBOOKS^^^^^^^", order)
-
-  // Going to have .map through array
-  // Since having trouble on backend with query as array prefer to do it on frontend.
+  // Loop through our array and add params to the fetch request one element at a time.
   order?.map((oneBookID, index) => {
     fetchUrl += `BookID[${index}]=${oneBookID}`
 
-    // Add & only if we are NOT on the first iteration, possible bug fix before bug even exists.
+    // Add & only if we are NOT on the first iteration, possible bug fix before bug exists.
     if (index >= 1) fetchUrl += "&"
+
   })
 
-  console.log("*** orderBooks fetchUrl ****", fetchUrl)
-
+  // Fetch the response on the backend and await the results.
   const response = await fetch(`${fetchUrl}`);
-  //const data: Promise<Book[]> = await response.json() as Promise<Book[]>;
   const data: Promise<OrderIdKeyValue> = await response.json() as Promise<OrderIdKeyValue>;
 
+  // Verify we are returning the correct data.
   console.log("orderBooks....orderBooks.....orderBooks", data)
 
   return (data);
-  throw new Error("Todo")
 }
 
 async function findBookOnShelf(book: BookID): Promise<Array<{ shelf: ShelfId, count: number }>> {
-  // Backend is built.
-  // Unable to test front-end or see console.log.
 
+  // Add our params to the url.
   var fetchUrl: string | undefined = `${baseUrl}/warehouse?bookId=${book}`;
 
+  // Fetch the response on the backend and await the results.
   const response = await fetch(`${fetchUrl}`);
   const data: Promise<shelve[]> = await response.json() as Promise<shelve[]>;
 
+  // Verify we are returning the correct data.
   console.log("findBookOnShelf....findBookOnShelf...findBookOnShelf", data)
 
-  return (data as Promise<shelve[]>);
-  //throw new Error("Todo")
+  return (data);
 }
 
 async function fulfilOrder(order: OrderId, booksFulfilled: Array<{ book: BookID, shelf: ShelfId, numberOfBooks: number }>): Promise<void> {
 
+  // Add our sub url to the base url.
   var fetchUrl: string | undefined = `${baseUrl}/Fulfilorders?`;
 
+  // Loop through our array and add params to the fetch request one element at a time.
   booksFulfilled?.map((oneBook: any, index) => {
     fetchUrl += `bookfulfilled[${index}]=${oneBook[index].BookID}&`
     fetchUrl += `bookfulfilled[${index}]=${oneBook[index].OrderId}&`
@@ -141,11 +142,11 @@ async function fulfilOrder(order: OrderId, booksFulfilled: Array<{ book: BookID,
     if (index >= 1) fetchUrl += "&"
   })
 
-  console.log("%%%%% FETCHURL %%%%%%%%%", fetchUrl);
-
+  // Fetch the response on the backend and await the results.
   const response = await fetch(`${fetchUrl}`);
   const data: Promise<void> = await response.json() as Promise<void>;
 
+  // Verify we are returning the correct data.
   console.log("fulfilOrder....fulfilOrder...fulfilOrder", data)
 
   return (data);
@@ -154,29 +155,32 @@ async function fulfilOrder(order: OrderId, booksFulfilled: Array<{ book: BookID,
 
 
 async function listOrders(): Promise<Array<{ orderId: OrderId, books: Record<BookID, number> }>> {
-  // Backend is built.
-  // Frontend is working in console.log only.
 
+  // Add our sub url to the base url.
   var fetchUrl: string | undefined = `${baseUrl}/orders?`;
 
+  // Fetch the response on the backend and await the results.
   const response: any = await fetch(`${fetchUrl}`)
+
+    // Convert our response to json.
     .then(res => res.json())
+
+    // Had to convert the result into an array and return it 
     .then((data: object | any) => {
-      console.log("Response data::::::::::::", data);
-      return Object.keys(data).map((key) => data[key]); // Had to convert the result into an array and return it - there wasn't any return value before.
-      //books.push(data);
-    }).catch((err) => {
+      return Object.keys(data).map((key) => data[key]);
+    })
+
+    // Catch any errors that may occur to provide better clarity.
+    .catch((err) => {
       console.log("FETCH ERROR.........", err)
-      throw new Error("Fetch error has occured........");
+      throw new Error("Fetch error has occured........", err);
     });
-  //const data: Promise<Book[]> = await response.json() as Promise<Book[]>;
-  //const data: Promise<listOrders[]> = await response.json() as Promise<listOrders[]>;
 
-  //console.log("listOrders....listOrders.....listOrders", data)
+  // Verify we are returning the correct data.
+  console.log("listOrders....listOrders.....listOrders", JSON.stringify(response))
 
-  console.log("@@@@@ RESPONSE ARRAY????? @@@@@@@@@", JSON.stringify(response));
   return (response);
-  //throw new Error("Todo")
+
 }
 
 const assignment = 'assignment-4'
