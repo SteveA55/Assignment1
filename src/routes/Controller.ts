@@ -1,6 +1,6 @@
 // src/users/usersController.ts
 import {
-    Body,
+    // Body,
     Controller,
     Get,
     Path,
@@ -10,7 +10,7 @@ import {
     SuccessResponse,
 } from "tsoa";
 import { User } from "../users/user";
-import { UsersService, UserCreationParams } from "../users/usersService";
+import { UsersService } from "../users/usersService";
 
 @Route("users")
 export class UsersController extends Controller {
