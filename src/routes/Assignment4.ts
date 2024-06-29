@@ -1,7 +1,8 @@
 import { createRouteSpec } from 'koa-zod-router';
 import { z } from 'zod';
 
-const mongoose = require("mongoose");
+
+import mongoose from "mongoose";
 
 // Import our mongoose document models.
 import { Book } from "../models/books";
@@ -243,7 +244,7 @@ export const fulfilOrder = createRouteSpec({
         // Capture the provided query for processing.
         const { query }: any = ctx.request;
 
-        var result;
+        let result;
 
         // Loop through the array from provided input. Create a new order based upon the provided params.
         if (query !== undefined && query !== null) {

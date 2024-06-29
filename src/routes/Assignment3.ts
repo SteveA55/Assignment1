@@ -1,9 +1,9 @@
 import { createRouteSpec } from 'koa-zod-router';
 import { z } from 'zod';
 
-const fs = require("fs");
+import fs from "fs"
 
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 // Import our mongoose document models.
 import { Book } from "../models/books";

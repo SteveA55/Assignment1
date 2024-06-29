@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "This is a template repository for the first assignment in BVD 103 at McMaster Continuing Education.",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start-server": "./tsoa-project/my-npx-script.sh && tsx ./src/index.ts",
