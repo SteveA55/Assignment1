@@ -1,4 +1,5 @@
 // src/users/usersController.ts
+
 import {
     // Body,
     Controller,
@@ -9,8 +10,12 @@ import {
     Route,
     SuccessResponse,
 } from "tsoa";
+
 import { User } from "../users/user";
 import { UsersService } from "../users/usersService";
+import { type ParameterizedContext, type DefaultContext, type Request as KoaRequest } from 'koa'
+
+export type BookID = string;
 
 @Route("users")
 export class UsersController extends Controller {
@@ -30,5 +35,28 @@ export class UsersController extends Controller {
         this.setStatus(201); // set return status 201
         new UsersService().create(requestBody);
         return;
+    }
+}
+
+
+@Route('warehouse')
+
+export class WarehouseRoutes extends Controller {
+
+    @Get('{book}')
+
+    public async getBookInfo(
+
+        @Path() book: BookID,
+
+        @Request() request: KoaRequest
+
+    ): Promise<Record<string, number>> {
+
+        const ctx: ParameterizedContext<AppWarehouseDatabaseState, DefaultContext> = request.ctx
+
+        const data = ctx.state.warehouse
+
+        return data;
     }
 }

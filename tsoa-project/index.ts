@@ -14,10 +14,12 @@ import { lookupBookById, placeBooksOnShelf, orderBooks, listOrders, findBookOnSh
 //import { Server, IncomingMessage, ServerResponse } from "http";
 
 const cors = require('@koa/cors');
+
 const app = new Koa();
 const router = zodRouter();
 
-const mongoose = require("mongoose");
+
+import mongoose from "mongoose";
 
 /* Assignment 1 & 2 */
 router.register(listBooks);
