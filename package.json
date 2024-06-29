@@ -5,10 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start-server": "tsx ./src/index.ts",
-    "lint": "npx eslint ./",
-    "fix-lint": "npx eslint --fix ./",
-    "type-check": "tsc --noEmit",
+    "start-server": "./tsoa-project/my-npx-script.sh && tsx ./src/index.ts",
+    "lint": "./tsoa-project/my-npx-script.sh && npx eslint ./",
+    "fix-lint": "./tsoa-project/my-npx-script.sh && npx eslint --fix ./",
+    "type-check": "./tsoa-project/my-npx-script.sh && tsc --noEmit",
     "test:ci": "vitest"
   },
   "keywords": [],
