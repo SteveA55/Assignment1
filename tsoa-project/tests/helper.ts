@@ -21,6 +21,8 @@ beforeEach(async (context: any) => {
 })
 
 it('should work', (context) => {
+
     console.log(context)
+
 })
 

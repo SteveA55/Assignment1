@@ -1,13 +1,13 @@
 let client: any;
 
-// Not sure where the following code actually goes (which file)
+
 export function getBookDatabase(dbName?: string): BookDatabaseAccessor {
 
   const database = client.db(dbName ?? Math.floor(Math.random() * 100000).toPrecision().toString())
 
 }
 
-// Not sure where the following code actually goes (which file)
+
 export interface AppWarehouseDatabaseState {
 
   warehouse: WarehouseData
