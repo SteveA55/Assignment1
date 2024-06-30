@@ -51,7 +51,7 @@ async function removeBook(book: BookID): Promise<void> {
 }
 
 // Set the base url to avoid repeating code.
-var baseUrl: string = "http://localhost:3000/booksAssignment4";
+const baseUrl: string = "http://localhost:3000/booksAssignment4";
 
 async function lookupBookById(book: BookID): Promise<Book> {
 
@@ -90,7 +90,7 @@ async function placeBooksOnShelf(bookId: BookID, numberOfBooks: number, shelf: S
 async function orderBooks(order: BookID[]): Promise<{ orderId: OrderId }> {
 
   // Add our params to the url.
-  var fetchUrl: string | undefined = `${baseUrl}/createOrder?`;
+  let fetchUrl: string | undefined = `${baseUrl}/createOrder?`;
 
   // Loop through our array and add params to the fetch request one element at a time.
   order?.map((oneBookID, index) => {
@@ -129,7 +129,7 @@ async function findBookOnShelf(book: BookID): Promise<Array<{ shelf: ShelfId, co
 async function fulfilOrder(order: OrderId, booksFulfilled: Array<{ book: BookID, shelf: ShelfId, numberOfBooks: number }>): Promise<void> {
 
   // Add our sub url to the base url.
-  var fetchUrl: string | undefined = `${baseUrl}/Fulfilorders?`;
+  let fetchUrl: string | undefined = `${baseUrl}/Fulfilorders?`;
 
   // Loop through our array and add params to the fetch request one element at a time.
   booksFulfilled?.map((oneBook: any, index) => {

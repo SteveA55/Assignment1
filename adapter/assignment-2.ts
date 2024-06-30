@@ -27,7 +27,7 @@ async function listBooks(filters?: Array<{ from?: number, to?: number }>): Promi
     if (filters === undefined) { return []; }
 
 
-    var fetchUrl;
+    let fetchUrl;
 
     try {
         // Test our input against the proper validation.
