@@ -1,15 +1,15 @@
 {
-  "name": "assignment1",
+  "name": "assignment-template",
   "version": "1.0.0",
   "description": "This is a template repository for the first assignment in BVD 103 at McMaster Continuing Education.",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start-server": "./tsoa-project/my-npx-script.sh && tsx ./src/index.ts",
-    "lint": "./tsoa-project/my-npx-script.sh && npx eslint ./",
-    "fix-lint": "./tsoa-project/my-npx-script.sh && npx eslint --fix ./",
-    "type-check": "./tsoa-project/my-npx-script.sh && tsc --noEmit",
-    "test:ci": "vitest"
+    "start-server": "./generate-openapi.sh && tsx ./index.ts",
+    "lint": "./generate-openapi.sh && eslint ./**/*.ts",
+    "fix-lint": "./generate-openapi.sh && eslint --fix ./**/*.ts",
+    "check-types": "./generate-openapi.sh && tsc --noEmit",
+    "test": "vitest",
+    "test:ci": "vitest run"
   },
   "keywords": [],
   "author": "",
@@ -17,24 +17,30 @@
   "dependencies": {
     "@koa/cors": "^5.0.0",
     "@koa/router": "^12.0.1",
-    "@typescript-eslint/parser": "^7.10.0",
-    "axios": "^1.6.8",
-    "koa": "^2.15.3",
+    "koa": "^2.15.2",
     "koa-bodyparser": "^4.4.1",
     "koa-qs": "^3.0.0",
     "koa-zod-router": "^2.2.0",
     "koa2-swagger-ui": "^5.10.0",
-    "mongoose": "^8.3.4",
-    "tsoa": "^6.3.1",
-    "yup": "^1.4.0",
-    "zod": "^3.23.6"
+    "mongodb": "^6.5.0",
+    "tsoa": "^6.2.0",
+    "uuid": "^9.0.1",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
-    "@eslint/js": "^8",
-    "eslint": "^8",
-    "globals": "^15.3.0",
-    "typescript": "^5.4.5",
-    "typescript-eslint": "^7.10.0",
-    "vitest": "^1.6.0"
+    "@openapitools/openapi-generator-cli": "^2.13.1",
+    "@types/koa": "~2.15.0",
+    "@types/koa__cors": "~5.0.0",
+    "@types/koa__router": "^12.0.4",
+    "@types/koa-qs": "~2.0.3",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "eslint": "^8.57.0",
+    "eslint-config-standard-with-typescript": "^43.0.1",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-n": "^16.6.2",
+    "eslint-plugin-promise": "^6.1.1",
+    "mongodb-memory-server": "^9.1.8",
+    "typescript": "^5.4.3",
+    "vitest": "^1.4.0"
   }
 }
