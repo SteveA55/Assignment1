@@ -34,3 +34,8 @@ services:
       - ./:/app
     working_dir: /app
     command: "npx -y tsx ./index.ts"
+
+  # MUST add mongo here. Mongo from inside .devcontainer was causing our "server" to fail.
+  # Once we added mongo inside this docker.compose.yaml and not the one inside .devcontainer, works as expected now.
+  mongo:
+    image: mongo:latest

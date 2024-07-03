@@ -5,6 +5,7 @@ import { type Book } from '../adapter/assignment-3'
 // This is the connection string for the mongo database in our docker compose file
 // We're using process.env to detect if a different mongo uri is set, primarily for testing purpuses
 const uri = (global as any).MONGO_URI as string ?? 'mongodb://mongo'
+//const uri = (global as any).MONGO_URI as string ?? "mongodb://mongo:27017" // my line attempt bug fix.
 
 // We're setting up a client, opening the database for our project, and then opening
 // a typed collection for our books.
@@ -22,7 +23,7 @@ export interface AppBookDatabaseState {
   books: BookDatabaseAccessor
 }
 
-export function getBookDatabase (dbName?: string): BookDatabaseAccessor {
+export function getBookDatabase(dbName?: string): BookDatabaseAccessor {
   const database = client.db(dbName ?? Math.floor(Math.random() * 100000).toPrecision().toString())
   const books = database.collection<Book>('books')
 
