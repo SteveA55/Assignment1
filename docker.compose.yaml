@@ -28,7 +28,7 @@ services:
       - "80"
     restart: always
 
-  node-server:
+  server:
     image: "node:20"
     volumes:
       - ./:/app
