@@ -26,3 +26,10 @@ services:
     ports:
       - "80"
     restart: always
+
+  node-server:
+    image: "node:20"
+    volumes:
+      - ./:/app
+    working_dir: /app
+    command: "npx -y tsx ./index.ts"
