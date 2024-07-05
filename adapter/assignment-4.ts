@@ -20,9 +20,9 @@ export interface Filter {
 
 // If multiple filters are provided, any book that matches at least one of them should be returned
 // Within a single filter, a book would need to match all the given conditions
-async function listBooks (filters?: Filter[]): Promise<Book[]> {
+async function listBooks(filters?: Filter[]): Promise<Book[]> {
   // We then make the request
-  const result = await fetch('http://localhost:3000/books/list', { body: JSON.stringify(filters ?? []), method: 'POST' })
+  const result = await fetch('http://localhost:3000/api/books/list', { body: JSON.stringify(filters ?? []), method: 'POST' })
 
   if (result.ok) {
     // And if it is valid, we parse the JSON result and return it.
@@ -32,16 +32,16 @@ async function listBooks (filters?: Filter[]): Promise<Book[]> {
   }
 }
 
-async function createOrUpdateBook (book: Book): Promise<BookID> {
+async function createOrUpdateBook(book: Book): Promise<BookID> {
   return await previous_assignment.createOrUpdateBook(book)
 }
 
-async function removeBook (book: BookID): Promise<void> {
+async function removeBook(book: BookID): Promise<void> {
   await previous_assignment.removeBook(book)
 }
 
-async function lookupBookById (book: BookID): Promise<Book> {
-  const result = await fetch(`http://localhost:3000/books/${book}`)
+async function lookupBookById(book: BookID): Promise<Book> {
+  const result = await fetch(`http://localhost:3000/api/books/${book}`)
   if (result.ok) {
     return await result.json() as Book
   } else {
@@ -52,15 +52,15 @@ async function lookupBookById (book: BookID): Promise<Book> {
 export type ShelfId = string
 export type OrderId = string
 
-async function placeBooksOnShelf (bookId: BookID, numberOfBooks: number, shelf: ShelfId): Promise<void> {
-  const result = await fetch(`http://localhost:3000/warehouse/${bookId}/${shelf}/${numberOfBooks}`, { method: 'put' })
+async function placeBooksOnShelf(bookId: BookID, numberOfBooks: number, shelf: ShelfId): Promise<void> {
+  const result = await fetch(`http://localhost:3000/api/warehouse/${bookId}/${shelf}/${numberOfBooks}`, { method: 'put' })
   if (!result.ok) {
     throw new Error('Couldnt Place on Shelf')
   }
 }
 
-async function orderBooks (order: BookID[]): Promise<{ orderId: OrderId }> {
-  const result = await fetch('http://localhost:3000/order', {
+async function orderBooks(order: BookID[]): Promise<{ orderId: OrderId }> {
+  const result = await fetch('http://localhost:3000/api/order', {
     method: 'post',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ order })
@@ -71,8 +71,8 @@ async function orderBooks (order: BookID[]): Promise<{ orderId: OrderId }> {
   return { orderId: await result.text() }
 }
 
-async function findBookOnShelf (book: BookID): Promise<Array<{ shelf: ShelfId, count: number }>> {
-  const result = await fetch(`http://localhost:3000/warehouse/${book}`)
+async function findBookOnShelf(book: BookID): Promise<Array<{ shelf: ShelfId, count: number }>> {
+  const result = await fetch(`http://localhost:3000/api/warehouse/${book}`)
   if (result.ok) {
     const results = (await result.json()) as Record<ShelfId, number>
     const shelfArray: Array<{ shelf: ShelfId, count: number }> = []
@@ -88,8 +88,8 @@ async function findBookOnShelf (book: BookID): Promise<Array<{ shelf: ShelfId, c
   }
 }
 
-async function fulfilOrder (order: OrderId, booksFulfilled: Array<{ book: BookID, shelf: ShelfId, numberOfBooks: number }>): Promise<void> {
-  const result = await fetch(`http://localhost:3000/fulfil/${order}`, {
+async function fulfilOrder(order: OrderId, booksFulfilled: Array<{ book: BookID, shelf: ShelfId, numberOfBooks: number }>): Promise<void> {
+  const result = await fetch(`http://localhost:3000/api/fulfil/${order}`, {
     method: 'put',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ booksFulfilled })
@@ -99,8 +99,8 @@ async function fulfilOrder (order: OrderId, booksFulfilled: Array<{ book: BookID
   }
 }
 
-async function listOrders (): Promise<Array<{ orderId: OrderId, books: Record<BookID, number> }>> {
-  const result = await fetch('http://localhost:3000/order')
+async function listOrders(): Promise<Array<{ orderId: OrderId, books: Record<BookID, number> }>> {
+  const result = await fetch('http://localhost:3000/api/order')
   if (result.ok) {
     return await result.json() as Array<{ orderId: OrderId, books: Record<BookID, number> }>
   } else {
