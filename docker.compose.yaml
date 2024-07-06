@@ -6,20 +6,12 @@ services:
     ports:
       - "8080:80"
     volumes:
-
-      # Could not see nginx start page (got 403 Forbidden) until I modified the line below to point to the following location.
-      # Warning the random charachters below is hard-coded and IT DOES change.
-
-      # /var/www/html:/var/lib/docker/overlay2/9c71801cbeba2fa3dabe83ecdc3ae95caa094444fb05d9d818983dee5cd0f4ba/merged/usr/share/nginx/html
-      #- /nginx.conf:/var/lib/docker/overlay2/9c71801cbeba2fa3dabe83ecdc3ae95caa094444fb05d9d818983dee5cd0f4ba/merged/etc/nginx/conf.d/default.conf
-
-      # The following line will break the nginx returning the homepage.
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
-    # - /workspaces/Assignment1/nginx.conf:/etc/nginx/conf.d/default.conf
 
     restart: always
 
   # Can't run docker-compose as "sudo", this will cause the following image fetch to fail.
+  # "mcmasterful-books" command running as front-end.
   front-end:
     image: "ghcr.io/mcmastercce/bvd-103-mcmasterful-books/mcmasterful-books-docker:main"
     volumes:
@@ -28,6 +20,7 @@ services:
       - "80"
     restart: always
 
+  # Node Server 1 - for HTTP load balancing
   server:
     image: "node:20"
     volumes:
@@ -35,6 +28,7 @@ services:
     working_dir: /app
     command: "npx -y tsx ./index.ts"
 
+  # Node Server 2 - for HTTP load balancing
   server-two:
     image: "node:20"
     volumes:
@@ -42,6 +36,7 @@ services:
     working_dir: /app
     command: "npx -y tsx ./index.ts"
 
+  # Node Server 3 - for HTTP load balancing
   server-three:
     image: "node:20"
     volumes:
