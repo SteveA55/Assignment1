@@ -15,7 +15,7 @@ services:
   front-end:
     image: "ghcr.io/mcmastercce/bvd-103-mcmasterful-books/mcmasterful-books-docker:main"
     volumes:
-      - /adapter:/source/adapter
+      - ./adapter:/source/adapter
     ports:
       - "80"
     restart: always
