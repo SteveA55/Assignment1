@@ -42,6 +42,28 @@ services:
     volumes:
       - ./:/app
     working_dir: /app
+    command: "npx -y tsx ./index.ts" # Node Orders Server
+  server-orders:
+    image: "node:20"
+    volumes:
+      - ./:/app
+    working_dir: /app
+    command: "npx -y tsx ./index.ts"
+
+  # Node Warehouse Server
+  server-warehouse:
+    image: "node:20"
+    volumes:
+      - ./:/app
+    working_dir: /app
+    command: "npx -y tsx ./index.ts"
+
+  # Node Swagger Docs Server
+  server-swagger:
+    image: "node:20"
+    volumes:
+      - ./:/app
+    working_dir: /app
     command: "npx -y tsx ./index.ts"
 
   # MUST add mongo here. Mongo from inside .devcontainer was causing our "server" to fail.
