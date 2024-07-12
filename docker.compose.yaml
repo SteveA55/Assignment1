@@ -71,3 +71,10 @@ services:
   # Once we added mongo inside this docker.compose.yaml and not the one inside .devcontainer, works as expected now.
   mongo:
     image: mongo:latest
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - 5672:5672
+      - 15672:15672
