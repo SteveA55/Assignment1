@@ -2,7 +2,7 @@ import { ObjectId, type Collection, type Db } from 'mongodb'
 import { type BookID, type OrderId, type ShelfId } from '../../adapter/assignment-4'
 import { client } from './database_access'
 import { type WarehouseData, InMemoryWarehouse } from './warehouse_data'
-import { generateId, seedWarehouseDatabase } from '../../database_test_utilities'
+import { generateId, seedWarehouseDatabase } from './database_test_utilities'
 
 export interface WarehouseDatabaseAccessor {
   database: Db
