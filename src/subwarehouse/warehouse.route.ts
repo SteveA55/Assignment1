@@ -2,9 +2,9 @@ import { BodyProp, Controller, Get, Path, Post, Put, Route, SuccessResponse, Req
 import { getBookInfo } from './get_book_info'
 import { type ShelfId, type BookID, type OrderId, type FulfilledBooks, type OrderPlacement, type Order } from './documented_types'
 import { placeBooksOnShelf } from './place_on_shelf'
-import { fulfilOrder } from '../suborders/fulfil_order'
+import { fulfilOrder } from './fulfil_order'
 import { placeOrder } from './place_order'
-import { listOrders } from '../suborders/list_orders'
+import { listOrders } from './list_orders'
 import { type ParameterizedContext, type DefaultContext, type Request as KoaRequest } from 'koa'
 import { type AppWarehouseDatabaseState } from './warehouse_database'
 
