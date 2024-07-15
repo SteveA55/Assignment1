@@ -78,3 +78,15 @@ services:
     ports:
       - 5672:5672
       - 15672:15672
+    # Seperate databases for APIs, this one belongs to warehouse.
+  mongo-warehouse:
+    image: mongo:latest
+    volumes:
+      - ./src/subwarehouse:/mongodb/warehouse
+    working_dir: /mongodb/warehouse
+    # Seperate databases for APIs, this one belongs to orders.
+  mongo-orders:
+    image: mongo:latest
+    volumes:
+      - ./src/suborders:/mongodb/orders
+    working_dir: /mongodb/orders
