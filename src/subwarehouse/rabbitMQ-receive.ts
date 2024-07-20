@@ -8,7 +8,7 @@ export default function rabbitMqReceive() {
 
         if (error) {
 
-            console.log("RABBIT MQ ...CONNECTION... ERROR: ", error)
+            console.log("[RABBIT MQ - CONNECTION ERROR] ", error)
             return;
 
         }
@@ -17,7 +17,7 @@ export default function rabbitMqReceive() {
 
             if (error) {
 
-                console.log("RABBIT MQ ...CREATE CHANNEL.. ERROR: ", error)
+                console.log("[RABBIT MQ - CREATE CHANNEL ERROR] ", error)
                 return;
 
             }

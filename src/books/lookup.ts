@@ -10,7 +10,7 @@ import rabbitMqReceive from "../subwarehouse/rabbitMQ-receive";
 async function getBook(id: BookID, { books }: BookDatabaseAccessor): Promise<Book | false> {
   if (id.length !== 24) {
     console.error('Failed with id: ', id)
-    console.log("[ FAILED (GETBOOK) ] SENDING MESSAGE TO RABBITMQ...............................");
+
     rabbitMqConnectAndSend(`[Book information retrieved] HAS FAILED`);
     rabbitMqReceive();
     return false
@@ -27,7 +27,7 @@ async function getBook(id: BookID, { books }: BookDatabaseAccessor): Promise<Boo
     price: result.price,
     image: result.image
   }
-  console.log("SENDING MESSAGE TO RABBITMQ...............................");
+
   rabbitMqConnectAndSend(`[Book information retrieved] ${result}`);
   rabbitMqReceive();
 

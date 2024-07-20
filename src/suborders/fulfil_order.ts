@@ -1,5 +1,7 @@
 import { type ShelfId, type BookID, type OrderId } from '../../adapter/assignment-4'
 import { InMemoryWarehouse, type WarehouseData } from '../subwarehouse/warehouse_data'
+import rabbitMqConnectAndSend from "../subwarehouse/rabbitMQ-send";
+import rabbitMqReceive from "../subwarehouse/rabbitMQ-receive";
 
 export async function fulfilOrder(data: WarehouseData, orderId: OrderId, booksFulfilled: Array<{ book: BookID, shelf: ShelfId, numberOfBooks: number }>): Promise<void> {
   const order = await data.getOrder(orderId)
@@ -34,6 +36,9 @@ export async function fulfilOrder(data: WarehouseData, orderId: OrderId, booksFu
   await Promise.all(processedFulfilment.map(async ({ book, shelf, numberOfBooks }) => {
     await data.placeBookOnShelf(book, shelf, numberOfBooks)
   }))
+
+  rabbitMqConnectAndSend(`[Order fullfilled] ${orderId}`);
+  rabbitMqReceive();
 }
 if (import.meta.vitest !== undefined) {
   const { test, expect } = import.meta.vitest

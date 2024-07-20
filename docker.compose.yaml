@@ -71,6 +71,9 @@ services:
   # Once we added mongo inside this docker.compose.yaml and not the one inside .devcontainer, works as expected now.
   mongo:
     image: mongo:latest
+    # Sometimes rabbitMQ fails here but sometimes it works.
+    # if it fails, comment out all rabbit lines below.
+    # Then run the command: docker run -p 5672:5672 rabbitmq (instead) and rabbitMQ will function correctly again.
 
   rabbitmq:
     image: rabbitmq:3-management

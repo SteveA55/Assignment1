@@ -1,5 +1,7 @@
 import { type ShelfId, type BookID } from '../../adapter/assignment-4'
 import { InMemoryWarehouse, type WarehouseData } from './warehouse_data'
+import rabbitMqConnectAndSend from "../subwarehouse/rabbitMQ-send";
+import rabbitMqReceive from "../subwarehouse/rabbitMQ-receive";
 
 export async function placeBooksOnShelf(data: WarehouseData, bookId: BookID, numberOfBooks: number, shelf: ShelfId): Promise<void> {
   if (numberOfBooks < 0) {
@@ -7,6 +9,9 @@ export async function placeBooksOnShelf(data: WarehouseData, bookId: BookID, num
   }
   const current = await data.getCopiesOnShelf(bookId, shelf) ?? 0
   await data.placeBookOnShelf(bookId, shelf, current + numberOfBooks)
+
+  rabbitMqConnectAndSend(`[Order placed on shelf] Book: ${bookId} Shelf: ${shelf} Current: ${current} Number of books: ${numberOfBooks}`);
+  rabbitMqReceive();
 }
 
 if (import.meta.vitest !== undefined) {
@@ -33,4 +38,6 @@ if (import.meta.vitest !== undefined) {
 
     await expect(async () => { await placeBooksOnShelf(data, 'my_book', -1, 'my_shelf') }).rejects.toThrowError(/less than 0/)
   })
+
+
 }
