@@ -4,10 +4,15 @@ import { type BookID, type Book } from '../../adapter/assignment-2'
 import { type ZodRouter } from 'koa-zod-router'
 import { ObjectId } from 'mongodb'
 import { generateId, seedBookDatabase } from '../../database_test_utilities'
+import rabbitMqConnectAndSend from "../subwarehouse/rabbitMQ-send";
+import rabbitMqReceive from "../subwarehouse/rabbitMQ-receive";
 
 async function getBook(id: BookID, { books }: BookDatabaseAccessor): Promise<Book | false> {
   if (id.length !== 24) {
     console.error('Failed with id: ', id)
+    console.log("[ FAILED (GETBOOK) ] SENDING MESSAGE TO RABBITMQ...............................");
+    rabbitMqConnectAndSend(`[Book information retrieved] HAS FAILED`);
+    rabbitMqReceive();
     return false
   }
   const result = await books.findOne({ _id: ObjectId.createFromHexString(id.trim()) })
@@ -22,6 +27,10 @@ async function getBook(id: BookID, { books }: BookDatabaseAccessor): Promise<Boo
     price: result.price,
     image: result.image
   }
+  console.log("SENDING MESSAGE TO RABBITMQ...............................");
+  rabbitMqConnectAndSend(`[Book information retrieved] ${result}`);
+  rabbitMqReceive();
+
   return book
 }
 

@@ -19,6 +19,7 @@ export default async function createOrUpdateBook(book: Book, books: BookDatabase
     if (result.modifiedCount === 1) {
       return id
     } else {
+      console.log("Create or update book has FAILED.");
       return false
     }
   } else {
