@@ -13,6 +13,6 @@ jobs:
         - uses: actions/setup-node@v4
           with:
             node-version: '20'
-        - run: docker build /workspaces/Assignment1/src/books/
-        - run: docker build /workspaces/Assignment1/src/suborders/
-        - run: docker build /workspaces/Assignment1/src/subwarehouse/
+        - run: docker build ./src/books
+        - run: docker build ./src/suborders
+        - run: docker build ./src/subwarehouse
